@@ -3,8 +3,6 @@
  * Created 2018-01-07
  *
  * Last update: 2018-01-07
- * 			Imported existing source to project
- * 			- Noah
  */
 #include "WPILib.h"
 #include <MyJoystick.h>
@@ -15,7 +13,7 @@ MyJoystick::MyJoystick() {
 
 }
 
-MyJoystick::~MyJoystick()
+MyJoystick::~MyJoystick() // Delete all pointers in button array
 {
 	if( m_Joystick != NULL)
 	{
@@ -33,7 +31,7 @@ MyJoystick::~MyJoystick()
 	}
 }
 
-void MyJoystick::init(Joystick* theJoystick)
+void MyJoystick::init(Joystick* theJoystick) // Create list of buttons from referenced Joystick
 {
 	m_Joystick = theJoystick;
 
@@ -43,7 +41,7 @@ void MyJoystick::init(Joystick* theJoystick)
 	}
 }
 
-void MyJoystick::readJoystick()
+void MyJoystick::readJoystick() // Check all buttons to update values
 {
 	// get all the button values
 	for (int i = 0; i < MAXBUTTONS; i++)
@@ -52,33 +50,33 @@ void MyJoystick::readJoystick()
 	}
 }
 
-bool MyJoystick::readButton(int buttonNumber){
+bool MyJoystick::readButton(int buttonNumber){ // Retrieve specific button value from value array
 	// get the correct button value
 
 	return buttonValueArray[buttonNumber - 1];
 }
 
-float MyJoystick::checkLeftStickX()
+float MyJoystick::checkLeftStickX() // Get Joystick X-axis (left X on gamepad)
 {
 	return m_Joystick->GetX();
 }
 
-float MyJoystick::checkLeftStickY()
+float MyJoystick::checkLeftStickY() // Get Joystick Y-axis (left Y on gamepad)
 {
 	return m_Joystick->GetY()*-1;
 }
 
-float MyJoystick::checkRightStickX()
+float MyJoystick::checkRightStickX() // Get Joystick Z-axis (right X on gamepad)
 {
 	return m_Joystick->GetZ();
 }
 
-float MyJoystick::checkRightStickY()
+float MyJoystick::checkRightStickY() // Get Joystick throttle (right Y on gamepad)
 {
 	return m_Joystick->GetThrottle();
 }
 
-int MyJoystick::getPOV()
+int MyJoystick::getPOV() // Get d-pad direction
 {
 	return m_Joystick->GetPOV();
 }

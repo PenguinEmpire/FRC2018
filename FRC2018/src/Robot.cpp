@@ -3,8 +3,6 @@
  * Created 2018-01-07
  *
  * Last Update: 2018-01-07
- * 			Set up framework of code (PenguinEmpire.h, MyJoystick.h, MyJoystick.cpp, Robot.cpp)
- * 			- Noah
  */
 
 #include "PenguinEmpire.h"
@@ -51,7 +49,7 @@ void Robot::TestInit() { // Runs at start of test phase, only once
 
 }
 
-void Robot::TestPeriodic() { // Looped through iteratively during teleoperated phase - do not put loops here!
+void Robot::TestPeriodic() { // Looped through iteratively during test phase - do not put loops here!
 
 }
 
