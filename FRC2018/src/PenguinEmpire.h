@@ -13,8 +13,8 @@
 class Robot : public IterativeRobot {
 public:
 // Components and Systems
-
-
+	Joystick left, right, handheld;
+	Spark l1, l2, r1, r2;
 
 // Stages
 
