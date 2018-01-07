@@ -49,7 +49,7 @@ void Robot::TestInit() { // Runs at start of test phase, only once
 
 }
 
-void Robot::TestPeriodic() { // Looped through iteratively during teleoperated phase - do not put loops here!
+void Robot::TestPeriodic() { // Looped through iteratively during test phase - do not put loops here!
 
 }
 
