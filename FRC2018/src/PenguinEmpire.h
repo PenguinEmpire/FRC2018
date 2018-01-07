@@ -3,8 +3,6 @@
  * Created 2018-01-07
  *
  * Last update: 2018-01-07
- * 			Set up basic Robot class with default functions
- * 			- Noah
  */
 
 #ifndef SRC_PENGUINEMPIRE_H_
@@ -14,6 +12,12 @@
 
 class Robot : public IterativeRobot {
 public:
+// Components and Systems
+
+
+
+// Stages
+
 	// Setup
 	Robot();
 	~Robot();
@@ -32,7 +36,5 @@ public:
 	void TestPeriodic();
 
 };
-
-
 
 #endif /* SRC_PENGUINEMPIRE_H_ */

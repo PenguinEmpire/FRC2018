@@ -3,8 +3,6 @@
  * Created 2018-01-07
  *
  * Last Update: 2018-01-07
- * 			Set up framework of code (PenguinEmpire.h, MyJoystick.h, MyJoystick.cpp, Robot.cpp)
- * 			- Noah
  */
 
 #include "PenguinEmpire.h"
