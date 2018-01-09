@@ -53,8 +53,8 @@ void Robot::AutonomousPeriodic() { // Looped through iteratively during autonomo
 /*
  * Autonomous Functions:
  * CheckSide
- * LeftAuto - wip
- * RightAuto - wip
+ * LeftAuto - empty
+ * RightAuto - empty
  */
 
 void Robot::CheckSide() {
