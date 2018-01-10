@@ -22,7 +22,8 @@ public:
 	AHRS* ahrs;
 
 // Values
-	bool leftauto;
+	bool leftswitch;
+	bool leftscale;
 
 // Stages
 

@@ -26,8 +26,10 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	r1(pwm2),
 	r2(pwm3)
 {
-	leftauto = false;
+	leftswitch = false;
+	leftscale = false;
 
+	// Point MyJoysticks to Joysticks
 	m_left.init(&left);
 	m_right.init(&right);
 	m_handheld.init(&handheld);
@@ -58,13 +60,18 @@ void Robot::AutonomousPeriodic() { // Looped through iteratively during autonomo
  */
 
 void Robot::CheckSide() {
-	std::string gameData;
-	gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
-	if(gameData[0] == 'L')
-	{
-		leftauto = true;
+	std::string gamedata;
+	gamedata = frc::DriverStation::GetInstance().GetGameSpecificMessage();
+	if (gamedata[0] == 'L') {
+		leftswitch = true;
 	} else {
-		leftauto = false;
+		leftswitch = false;
+	}
+
+	if (gamedata[1] == 'L') {
+		leftscale = true;
+	} else {
+		leftscale = false;
 	}
 }
 
