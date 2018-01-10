@@ -35,7 +35,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 }
 
 Robot::~Robot() { // Robot destructor - Delete pointer values here
-	delete m_left, m_right, m_handheld;
+
 }
 
 void Robot::RobotInit() { // Runs only when robot code starts initially

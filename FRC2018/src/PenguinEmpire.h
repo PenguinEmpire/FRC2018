@@ -21,7 +21,7 @@ public:
 
 	AHRS* ahrs;
 
-//Values
+// Values
 	bool leftauto;
 
 // Stages
