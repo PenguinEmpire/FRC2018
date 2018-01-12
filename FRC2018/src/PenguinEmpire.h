@@ -18,7 +18,6 @@ public:
 	Joystick left, right, handheld; // Joysticks
 	MyJoystick m_left, m_right, m_handheld;
 	Spark l1, l2, r1, r2; // Drive motor controllers
-
 	AHRS *ahrs;
 
 // Values
