@@ -33,7 +33,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	m_left.init(&left);
 	m_right.init(&right);
 	m_handheld.init(&handheld);
-
+	ahrs = new AHRS(SerialPort::kMXP);
 }
 
 Robot::~Robot() { // Robot destructor - Delete pointer values here
