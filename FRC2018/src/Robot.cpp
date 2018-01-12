@@ -33,7 +33,10 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	m_left.init(&left);
 	m_right.init(&right);
 	m_handheld.init(&handheld);
+
 	ahrs = new AHRS(SerialPort::kMXP);
+
+	fpos = Center;
 }
 
 Robot::~Robot() { // Robot destructor - Delete pointer values here
@@ -46,6 +49,16 @@ void Robot::RobotInit() { // Runs only when robot code starts initially
 
 void Robot::AutonomousInit() { // Runs at start of autonomous phase, only once
 	CheckSide();
+	CheckPos();
+	if (fpos == Left) {
+		LeftAuto();
+	}
+	else if (fpos == Center) {
+		CenterAuto();
+	}
+	else if (fpos == Right) {
+		RightAuto();
+	}
 }
 
 void Robot::AutonomousPeriodic() { // Looped through iteratively during autonomous phase - do not put loops here!
@@ -55,11 +68,16 @@ void Robot::AutonomousPeriodic() { // Looped through iteratively during autonomo
 /*
  * Autonomous Functions:
  * CheckSide
+ * CheckPos - empty
  * LeftAuto - empty
  * RightAuto - empty
  */
 
 void Robot::CheckSide() {
+	/*
+	 * Get FMS, set left switch and scale bools
+	 */
+
 	std::string gamedata;
 	gamedata = frc::DriverStation::GetInstance().GetGameSpecificMessage();
 	if (gamedata[0] == 'L') {
@@ -75,12 +93,34 @@ void Robot::CheckSide() {
 	}
 }
 
-void Robot::LeftAuto() {
+void Robot::CheckPos() {
+	/*
+	 * Check TBD physical switch
+	 */
+}
 
+void Robot::LeftAuto() {
+	/*
+	 * Priority:
+	 * Scale
+	 * Switch
+	 * Auto Line
+	 */
+}
+
+void Robot::CenterAuto() {
+	/*
+	 * Use FMS and place cube	 *
+	 */
 }
 
 void Robot::RightAuto() {
-
+	/*
+	 * Priority:
+	 * Scale
+	 * Switch
+	 * Auto Line
+	 */
 }
 
 void Robot::TeleopInit() { // Runs at start of teleoperated phase, only once
@@ -97,6 +137,11 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
  */
 
 void Robot::TankDrive() {
+	/*
+	 * Get left and right stick values, set left and right motors accordingly
+	 *
+	 * Temp: may add control overrides
+	 */
 	double leftInput;
 	double rightInput;
 

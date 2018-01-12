@@ -25,6 +25,12 @@ public:
 	bool leftswitch;
 	bool leftscale;
 
+	enum FieldPosition {
+		Left,
+		Center,
+		Right
+	} fpos;
+
 // Stages
 
 	// Setup
@@ -36,7 +42,9 @@ public:
 	void AutonomousInit();
 	void AutonomousPeriodic();
 	void CheckSide();
+	void CheckPos();
 	void LeftAuto();
+	void CenterAuto();
 	void RightAuto();
 
 	// Teleoperated
