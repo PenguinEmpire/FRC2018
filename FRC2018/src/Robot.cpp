@@ -198,6 +198,9 @@ Robot::Step::~Step() {
 }
 
 void Robot::Step::Run() {
+	/*
+	 * Checks what the step is, then reads in the arguments and executes it
+	 */
 	if (type == reset) {
 		/*
 		 * Stop stuff
