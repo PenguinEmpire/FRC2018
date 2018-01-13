@@ -221,7 +221,7 @@ void Robot::Step::Run() {
 		}
 
 		/*
-		 * Move until encoders reach target value
+		 * Move at speed until encoders reach target value
 		 */
 	}
 	else if (type == gyroturn) {
@@ -232,6 +232,18 @@ void Robot::Step::Run() {
 			setup = false;
 		}
 		double speed, angle;
+		if (params.size() == 2) {
+			speed = params[0];
+			angle = params[1];
+		}
+		else {
+			speed = 0;
+			angle = 0;
+		}
+
+		/*
+		 * Turn at speed until gyro reaches target value
+		 */
 	}
 }
 
