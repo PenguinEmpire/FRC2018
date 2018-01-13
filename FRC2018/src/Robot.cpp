@@ -37,6 +37,10 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	ahrs = new AHRS(SerialPort::kMXP);
 
 	fpos = Center;
+
+	autosteps = {};
+	curstep = 0;
+	numsteps = 0;
 }
 
 Robot::~Robot() { // Robot destructor - Delete pointer values here
@@ -181,6 +185,55 @@ void Robot::TestPeriodic() { // Looped through iteratively during test phase - d
  * Test Functions:
  * None
  */
+
+Robot::Step::Step(Robot *r, StepType steptype, std::vector<double> parameters) : robot(r) {
+	params = parameters;
+	type = steptype;
+	complete = false;
+	setup = true;
+}
+
+Robot::Step::~Step() {
+	delete robot;
+}
+
+void Robot::Step::Run() {
+	if (type == reset) {
+		/*
+		 * Stop stuff
+		 */
+	}
+	else if (type == encodermove) {
+		if (setup) {
+			/*
+			 * Stop stuff and initialize
+			 */
+			setup = false;
+		}
+		double speed, distance;
+		if (params.size() == 2) {
+			speed = params[0];
+			distance = params[1];
+		}
+		else {
+			speed = 0;
+			distance = 0;
+		}
+
+		/*
+		 * Move until encoders reach target value
+		 */
+	}
+	else if (type == gyroturn) {
+		if (setup) {
+			/*
+			 * Stop stuff
+			 */
+			setup = false;
+		}
+		double speed, angle;
+	}
+}
 
 
 START_ROBOT_CLASS(Robot)
