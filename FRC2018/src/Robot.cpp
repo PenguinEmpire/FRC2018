@@ -48,7 +48,8 @@ Robot::~Robot() { // Robot destructor - Delete pointer values here
 }
 
 void Robot::RobotInit() { // Runs only when robot code starts initially
-
+	r1.SetInverted(true);
+	r2.SetInverted(true);
 }
 
 void Robot::AutonomousInit() { // Runs at start of autonomous phase, only once
@@ -152,9 +153,11 @@ void Robot::TankDrive() {
 	leftInput = left.GetRawAxis(1);
 	rightInput = right.GetRawAxis(1);
 
+	double inputMultiplier = 0.65;
+
 	if(fabs(leftInput) > 0.3) {
-		l1.Set(leftInput * -0.65);
-		l2.Set(leftInput * -0.65);
+		l1.Set(leftInput * -inputMultiplier);
+		l2.Set(leftInput * -inputMultiplier);
 	}
 	else
 	{
@@ -163,8 +166,8 @@ void Robot::TankDrive() {
 	}
 
 	if(fabs(rightInput) > 0.3) {
-		r1.Set(rightInput * -0.65);
-		r2.Set(rightInput * -0.65);
+		r1.Set(rightInput * -inputMultiplier);
+		r2.Set(rightInput * -inputMultiplier);
 	}
 	else
 	{
