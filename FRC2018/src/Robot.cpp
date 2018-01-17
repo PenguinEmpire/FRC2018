@@ -114,7 +114,7 @@ void Robot::LeftAuto() {
 
 void Robot::CenterAuto() {
 	/*
-	 * Use FMS and place cube	 *
+	 * Use FMS and place cube
 	 */
 }
 
@@ -213,15 +213,15 @@ void Robot::Step::Run() {
 			 */
 			setup = false;
 		}
-		double speed, distance;
-		if (params.size() == 2) {
-			speed = params[0];
-			distance = params[1];
-		}
-		else {
-			speed = 0;
-			distance = 0;
-		}
+//		double speed, distance;
+//		if (params.size() == 2) {
+//			speed = params[0];
+//			distance = params[1];
+//		}
+//		else {
+//			speed = 0;
+//			distance = 0;
+//		}
 
 		/*
 		 * Move at speed until encoders reach target value
@@ -234,15 +234,15 @@ void Robot::Step::Run() {
 			 */
 			setup = false;
 		}
-		double speed, angle;
-		if (params.size() == 2) {
-			speed = params[0];
-			angle = params[1];
-		}
-		else {
-			speed = 0;
-			angle = 0;
-		}
+//		double speed, angle;
+//		if (params.size() == 2) {
+//			speed = params[0];
+//			angle = params[1];
+//		}
+//		else {
+//			speed = 0;
+//			angle = 0;
+//		}
 
 		/*
 		 * Turn at speed until gyro reaches target value
