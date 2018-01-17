@@ -18,11 +18,36 @@ public:
 	Joystick left, right, handheld; // Joysticks
 	MyJoystick m_left, m_right, m_handheld;
 	Spark l1, l2, r1, r2; // Drive motor controllers
+	AHRS *ahrs;
 
-	AHRS* ahrs;
+// Values and Structures
+	bool leftswitch;
+	bool leftscale;
 
-//Values
-	bool leftauto;
+	enum FieldPosition { // Used for autonomous
+		Left,
+		Center,
+		Right
+	} fpos;
+
+	enum StepType { // Used for autonomous
+		reset,
+		encodermove,
+		gyroturn
+	};
+
+	struct Step {
+		Robot *robot;
+		StepType type;
+		bool complete, setup;
+		std::vector<double> params;
+		Step(Robot *r, StepType steptype, std::vector<double> parameters);
+		~Step();
+		void Run();
+	};
+
+	std::vector<Step> autosteps;
+	int numsteps, curstep;
 
 // Stages
 
@@ -35,7 +60,9 @@ public:
 	void AutonomousInit();
 	void AutonomousPeriodic();
 	void CheckSide();
+	void CheckPos();
 	void LeftAuto();
+	void CenterAuto();
 	void RightAuto();
 
 	// Teleoperated
