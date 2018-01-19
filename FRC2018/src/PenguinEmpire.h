@@ -23,6 +23,8 @@ public:
 // Values and Structures
 	bool leftswitch;
 	bool leftscale;
+	bool controlOverride;
+	bool gyroTurning;
 
 	enum FieldPosition { // Used for autonomous
 		Left,
@@ -68,7 +70,11 @@ public:
 	// Teleoperated
 	void TeleopInit();
 	void TeleopPeriodic();
+	void SetLeftSpeed(float speed);
+	void SetRightSpeed(float speed);
+	void StopMotors();
 	void TankDrive();
+	void GyroTurn(bool btn, float speed, double angle);
 
 	// Test
 	void TestInit();

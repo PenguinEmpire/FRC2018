@@ -28,6 +28,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 {
 	leftswitch = false;
 	leftscale = false;
+	controlOverride = false;
+	gyroTurning = false;
 
 	// Point MyJoysticks to Joysticks
 	m_left.init(&left);
@@ -133,20 +135,38 @@ void Robot::TeleopInit() { // Runs at start of teleoperated phase, only once
 }
 
 void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated phase - do not put loops here! Only teleop function calls!
-	TankDrive();
+	if (!controlOverride) {
+		TankDrive();
+	}
 }
 
 /*
  * Teleop Functions:
- * TankDrive - temp
+ * SetLeftSpeed
+ * SetRightSpeed
+ * TankDrive
+ * GyroTurn - wip
  */
+void Robot::SetLeftSpeed(float speed) {
+	l1.Set(speed);
+	l2.Set(speed);
+}
+
+void Robot::SetRightSpeed(float speed) {
+	r1.Set(speed);
+	r2.Set(speed);
+}
+
+void Robot::StopMotors() {
+	SetLeftSpeed(0.0);
+	SetRightSpeed(0.0);
+}
 
 void Robot::TankDrive() {
 	/*
 	 * Get left and right stick values, set left and right motors accordingly
-	 *
-	 * Temp: may add control overrides
 	 */
+
 	double leftInput;
 	double rightInput;
 
@@ -156,23 +176,37 @@ void Robot::TankDrive() {
 	double inputMultiplier = 0.65;
 
 	if(fabs(leftInput) > 0.3) {
-		l1.Set(leftInput * -inputMultiplier);
-		l2.Set(leftInput * -inputMultiplier);
+		SetLeftSpeed(leftInput * -inputMultiplier);
 	}
 	else
 	{
-		l1.Set(0);
-		l2.Set(0);
+		SetLeftSpeed(0.0);
 	}
 
 	if(fabs(rightInput) > 0.3) {
-		r1.Set(rightInput * -inputMultiplier);
-		r2.Set(rightInput * -inputMultiplier);
+		SetRightSpeed(rightInput * -inputMultiplier);
 	}
 	else
 	{
 		r1.Set(0);
 		r2.Set(0);
+	}
+}
+
+void Robot::GyroTurn(bool btn, float speed, double angle) {
+	if (btn || gyroTurning) {
+		if (angle < 0) {
+			if (ahrs->GetYaw() > angle) {
+				gyroTurning = true;
+				controlOverride = true;
+				SetLeftSpeed(-1.0);
+				SetRightSpeed(1.0);
+			}
+			else {
+				StopMotors();
+				controlOverride = false;
+			}
+		}
 	}
 }
 
