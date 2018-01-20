@@ -2,12 +2,13 @@
  * PenguinEmpire.h
  * Created 2018-01-07
  *
- * Last update: 2018-01-18
+ * Last update: 2018-01-20
  */
 
 #ifndef SRC_PENGUINEMPIRE_H_
 #define SRC_PENGUINEMPIRE_H_
 
+#include <string>
 #include "WPILib.h"
 #include "MyJoystick.h"
 #include "AHRS.h"
@@ -19,12 +20,17 @@ public:
 	MyJoystick m_left, m_right, m_handheld; // Button reading for Joysticks
 	Spark l1, l2, r1, r2; // Drive motor controllers
 	AHRS *ahrs; // Purple sensor board
+	Compressor compressor;
+	DoubleSolenoid leftGearbox, rightGearbox;
 
 // Values and Structures
-	bool leftSwitch;
-	bool leftScale;
-	bool controlOverride;
-	bool gyroTurning;
+	bool leftSwitch; // Is our color on the left side of the switch?
+	bool leftScale; // Is our color on the left side of the scale?
+	bool controlOverride; // Prevents manual control of drive
+	bool gyroTurning; // Checks if performing manual turn-to-angle
+	bool compressorEnabled; // Is compressor enabled?
+	bool pressureStatus;
+	float current;
 
 	enum FieldPosition { // Used for autonomous
 		leftPos,
@@ -76,11 +82,14 @@ public:
 	void TankDrive();
 	void GyroTurn(bool btn, float speed, double angle);
 	void GyroTurn(int pov, float speed);
+	void ManualShiftGears(bool upBtn, bool downBtn);
 
 	// Test
 	void TestInit();
 	void TestPeriodic();
 
+	//Other
+	void ShiftGears(std::string dir);
 };
 
 #endif /* SRC_PENGUINEMPIRE_H_ */

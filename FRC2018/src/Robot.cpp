@@ -2,10 +2,17 @@
  * Robot.cpp
  * Created 2018-01-07
  *
- * Last Update: 2018-01-18
+ * Last Update: 2018-01-20
  */
 
 #include "PenguinEmpire.h"
+
+const int pch0 = 0;
+const int pch1 = 1;
+const int pch2 = 2;
+const int pch3 = 3;
+
+const int pcm0 = 0;
 
 const int pwm0 = 0;
 const int pwm1 = 1;
@@ -24,12 +31,18 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	l1(pwm0),
 	l2(pwm1),
 	r1(pwm2),
-	r2(pwm3)
+	r2(pwm3),
+	compressor(pcm0),
+	leftGearbox(pcm0, pch0, pch1),
+	rightGearbox(pcm0, pch2, pch3)
 {
 	leftSwitch = false;
 	leftScale = false;
 	controlOverride = false;
 	gyroTurning = false;
+	compressorEnabled = false;
+	pressureStatus = false;
+	current = 0.0;
 
 	ahrs = new AHRS(SerialPort::kMXP);
 
@@ -52,6 +65,11 @@ Robot::~Robot() { // Robot destructor - Delete pointer values here
 void Robot::RobotInit() { // Runs only when robot code starts initially
 	r1.SetInverted(true);
 	r2.SetInverted(true);
+
+	compressorEnabled = compressor.Enabled();
+	pressureStatus = compressor.GetPressureSwitchValue();
+	current = compressor.GetCompressorCurrent();
+	compressor.SetClosedLoopControl(true);
 }
 
 void Robot::AutonomousInit() { // Runs at start of autonomous phase, only once
@@ -148,6 +166,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	}
 
 	GyroTurn(m_left.GetPOV(), 0.65);
+	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
 }
 
 /*
@@ -155,7 +174,8 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
  * SetLeftSpeed
  * SetRightSpeed
  * TankDrive
- * GyroTurn - wip
+ * GyroTurn
+ * ManualShiftGears - wip
  */
 void Robot::SetLeftSpeed(float speed) {
 	l1.Set(speed);
@@ -282,6 +302,16 @@ void Robot::GyroTurn(int pov, float speed) { // Turn based on POV
 	}
 }
 
+void Robot::ManualShiftGears(bool upBtn, bool downBtn) {
+	if (upBtn) {
+		ShiftGears("up");
+	}
+
+	if (downBtn) {
+		ShiftGears("down");
+	}
+}
+
 void Robot::TestInit() { // Runs at start of test phase, only once
 
 }
@@ -294,6 +324,27 @@ void Robot::TestPeriodic() { // Looped through iteratively during test phase - d
  * Test Functions:
  * None
  */
+
+/*
+ * Other Functions:
+ * ShiftGears - wip
+ */
+
+void Robot::ShiftGears(std::string dir) {
+	/*
+	 * Initiate or uninitiate gearboxes to change gear ratio
+	 */
+	DoubleSolenoid::Value state;
+	if (dir == "up") {
+		state = DoubleSolenoid::kForward;
+	}
+	else {
+		state = DoubleSolenoid::kReverse;
+	}
+
+	leftGearbox.Set(state);
+	rightGearbox.Set(state);
+}
 
 Robot::Step::Step(Robot *r, StepType steptype, std::vector<double> parameters) : robot(r) {
 	params = parameters;
