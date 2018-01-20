@@ -166,7 +166,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	}
 
 	GyroTurn(m_left.ReadButton(11), -90, 1.0);
-	GyroTurn(m_left.ReadButton(10), 180, 1.0);
+	GyroTurn(m_left.ReadButton(10), -179, 1.0);
 	GyroTurn(m_left.ReadButton(12), 90, 1.0);
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
 }
