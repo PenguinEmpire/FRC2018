@@ -272,7 +272,7 @@ void Robot::GyroTurn(int pov, float speed) { // Turn based on POV
 			ahrs->Reset(); // Reset yaw to zero
 		}
 	}
-	else if (pov == 270 || gyroTurning) { // Turn 180 degrees clockwise
+	else if (pov == 180 || gyroTurning) { // Turn 180 degrees clockwise
 		if (ahrs->GetYaw() < 180) {
 			gyroTurning = true;
 			controlOverride = true;
@@ -286,7 +286,7 @@ void Robot::GyroTurn(int pov, float speed) { // Turn based on POV
 			ahrs->Reset();
 		}
 	}
-	else if (pov == 180 || gyroTurning) { // Turn 90 degrees counterclockwise
+	else if (pov == 270 || gyroTurning) { // Turn 90 degrees counterclockwise
 		if (ahrs->GetYaw() < 90) {
 			gyroTurning = true;
 			controlOverride = true;
