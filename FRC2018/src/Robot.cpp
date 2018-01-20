@@ -165,7 +165,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 		TankDrive();
 	}
 
-	GyroTurn(m_left.GetPOV(), 0.65);
+	GyroTurn(m_left.GetPOV(), 1.0);
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
 }
 
@@ -262,8 +262,8 @@ void Robot::GyroTurn(int pov, float speed) { // Turn based on POV
 		if (ahrs->GetYaw() > -90) {
 			gyroTurning = true; // Allows us to continue turning to the angle if pov is released
 			controlOverride = true; // Prevents tank drive control during turn
-			SetLeftSpeed(speed);
-			SetRightSpeed(-speed);
+			SetLeftSpeed(-speed);
+			SetRightSpeed(speed);
 		}
 		else {
 			StopMotors();
@@ -276,8 +276,8 @@ void Robot::GyroTurn(int pov, float speed) { // Turn based on POV
 		if (ahrs->GetYaw() < 180) {
 			gyroTurning = true;
 			controlOverride = true;
-			SetLeftSpeed(speed);
-			SetRightSpeed(-speed);
+			SetLeftSpeed(-speed);
+			SetRightSpeed(speed);
 		}
 		else {
 			StopMotors();
