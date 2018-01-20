@@ -238,6 +238,7 @@ void Robot::GyroTurn(bool btn, float speed, double angle) { // Turn based on but
 				StopMotors();
 				gyroTurning = false;
 				controlOverride = false;
+				ahrs->ZeroYaw();
 			}
 		}
 		else {
@@ -251,6 +252,7 @@ void Robot::GyroTurn(bool btn, float speed, double angle) { // Turn based on but
 				StopMotors();
 				gyroTurning = false;
 				controlOverride = false;
+				ahrs->ZeroYaw();
 			}
 		}
 	}
