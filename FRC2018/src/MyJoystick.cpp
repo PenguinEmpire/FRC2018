@@ -34,8 +34,7 @@ void MyJoystick::Init(Joystick* theJoystick) { // Create list of buttons from re
 }
 
 void MyJoystick::ReadJoystick() { // Check all buttons to update values
-	for (int i = 0; i < MAXBUTTONS; i++)
-	{
+	for (int i = 0; i < MAXBUTTONS; i++) {
 		buttonValueArray[i] = buttonArray[i]->Get();
 	}
 }
