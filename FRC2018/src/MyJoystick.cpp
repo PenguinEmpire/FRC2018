@@ -7,7 +7,7 @@
 #include "WPILib.h"
 #include <MyJoystick.h>
 
-#define MAXBUTTONS 10
+#define MAXBUTTONS 12
 
 MyJoystick::MyJoystick() {
 
