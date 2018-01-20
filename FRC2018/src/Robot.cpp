@@ -312,59 +312,56 @@ void Robot::Step::Run() {
 	 */
 	switch (type) {
 	case reset:
-		break;
-	case encoderMove:
-		break;
-	case gyroTurn:
-		break;
-	
-	}
-	if (type == reset) {
 		/*
 		 * Stop stuff
 		 */
-	}
-	else if (type == encoderMove) {
+		break;
+	case encoderMove:
 		if (setup) {
 			/*
 			 * Stop stuff and initialize
 			 */
 			setup = false;
 		}
-//		double speed, distance;
-//		if (params.size() == 2) {
-//			speed = params[0];
-//			distance = params[1];
-//		}
-//		else {
-//			speed = 0;
-//			distance = 0;
-//		}
+		else {
+//			double speed, distance;
+//			if (params.size() == 2) {
+//				speed = params[0];
+//				distance = params[1];
+//			}
+//			else {
+//				speed = 0;
+//				distance = 0;
+//			}
+		}
 
 		/*
 		 * Move at speed until encoders reach target value
 		 */
-	}
-	else if (type == gyroTurn) {
+		break;
+	case gyroTurn:
 		if (setup) {
 			/*
 			 * Stop stuff
 			 */
 			setup = false;
 		}
-//		double speed, angle;
-//		if (params.size() == 2) {
-//			speed = params[0];
-//			angle = params[1];
-//		}
-//		else {
-//			speed = 0;
-//			angle = 0;
-//		}
+		else {
+//			double speed, angle;
+//			if (params.size() == 2) {
+//				speed = params[0];
+//				angle = params[1];
+//			}
+//			else {
+//				speed = 0;
+//				angle = 0;
+//			}
+		}
 
 		/*
 		 * Turn at speed until gyro reaches target value
 		 */
+		break;
 	}
 }
 
