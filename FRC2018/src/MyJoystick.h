@@ -10,13 +10,13 @@
 #ifndef SRC_MYJOYSTICK_H_
 #define SRC_MYJOYSTICK_H_
 
-#define MAXBUTTONS 10
+#define maxButtons 12
 
 class MyJoystick {
 private:
 	Joystick* m_Joystick = NULL;			// Pointer to existing Joystick object to read from
-	JoystickButton* buttonArray[MAXBUTTONS]; // List of buttons on referenced Joystick
-	bool buttonValueArray[MAXBUTTONS];		 // List of values corresponding to buttons on the same indices of above array
+	JoystickButton* buttonArray[maxButtons]; // List of buttons on referenced Joystick
+	bool buttonValueArray[maxButtons];		 // List of values corresponding to buttons on the same indices of above array
 public:
 
 	// Setup

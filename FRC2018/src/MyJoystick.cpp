@@ -7,15 +7,14 @@
 #include "WPILib.h"
 #include <MyJoystick.h>
 
-#define MAXBUTTONS 12
-
+#define maxButtons 12
 MyJoystick::MyJoystick() {
 
 }
 
 MyJoystick::~MyJoystick() { // Delete all pointers in button array
 	if( m_Joystick != NULL) {
-		for (int i = 0; i < MAXBUTTONS; i++) {
+		for (int i = 0; i < maxButtons; i++) {
 			if( buttonArray[i] != NULL ) {
 				delete buttonArray[i];
 				buttonArray[i] = NULL;
@@ -28,13 +27,13 @@ MyJoystick::~MyJoystick() { // Delete all pointers in button array
 void MyJoystick::Init(Joystick* theJoystick) { // Create list of buttons from referenced Joystick
 	m_Joystick = theJoystick;
 
-	for (int i = 0; i < MAXBUTTONS; i++) {
+	for (int i = 0; i < maxButtons; i++) {
 		buttonArray[i] = new JoystickButton(m_Joystick, i + 1);
 	}
 }
 
 void MyJoystick::ReadJoystick() { // Check all buttons to update values
-	for (int i = 0; i < MAXBUTTONS; i++) {
+	for (int i = 0; i < maxButtons; i++) {
 		buttonValueArray[i] = buttonArray[i]->Get();
 	}
 }
