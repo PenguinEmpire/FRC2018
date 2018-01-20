@@ -31,6 +31,7 @@ public:
 	bool compressorEnabled; // Is compressor enabled?
 	bool pressureStatus;
 	float current;
+	int latestYaw;
 
 	enum FieldPosition { // Used for autonomous
 		leftPos,

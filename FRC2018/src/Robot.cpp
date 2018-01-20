@@ -43,6 +43,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	compressorEnabled = false;
 	pressureStatus = false;
 	current = 0.0;
+	latestYaw = 0;
 
 	ahrs = new AHRS(SerialPort::kMXP);
 
@@ -169,6 +170,9 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	GyroTurn(m_left.ReadButton(10), -179, 1.0);
 	GyroTurn(m_left.ReadButton(12), 90, 1.0);
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
+
+	//Send dashboard values
+	SmartDashboard::PutNumber("Gyro Turning Yaw", latestYaw);
 }
 
 /*
@@ -227,6 +231,7 @@ void Robot::TankDrive() {
 
 void Robot::GyroTurn(bool btn, float speed, double angle) { // Turn based on button value
 	if (btn || gyroTurning) {
+		latestYaw = ahrs->GetYaw();
 		if (angle < 0) {
 			if (ahrs->GetYaw() > angle) { // Turn counterclockwise
 				gyroTurning = true;
