@@ -31,11 +31,6 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	controlOverride = false;
 	gyroTurning = false;
 
-	// Point MyJoysticks to Joysticks
-	m_left.init(&left);
-	m_right.init(&right);
-	m_handheld.init(&handheld);
-
 	ahrs = new AHRS(SerialPort::kMXP);
 
 	fpos = Center;
@@ -43,6 +38,11 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	autosteps = {};
 	curstep = 0;
 	numsteps = 0;
+
+	l1.SetExpiration(0.1);
+	l2.SetExpiration(0.1);
+	r1.SetExpiration(0.1);
+	r2.SetExpiration(0.1);
 }
 
 Robot::~Robot() { // Robot destructor - Delete pointer values here
@@ -131,13 +131,23 @@ void Robot::RightAuto() {
 }
 
 void Robot::TeleopInit() { // Runs at start of teleoperated phase, only once
-
+	// Point MyJoysticks to Joysticks
+	m_left.init(&left);
+	m_right.init(&right);
+	m_handheld.init(&handheld);
 }
 
 void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated phase - do not put loops here! Only teleop function calls!
+	// Read in button value changes at start of teleop iteration
+	m_left.readJoystick();
+	m_right.readJoystick();
+	m_handheld.readJoystick();
+
 	if (!controlOverride) {
 		TankDrive();
 	}
+
+	GyroTurn(m_left.getPOV(), 0.65);
 }
 
 /*
@@ -193,19 +203,81 @@ void Robot::TankDrive() {
 	}
 }
 
-void Robot::GyroTurn(bool btn, float speed, double angle) {
+void Robot::GyroTurn(bool btn, float speed, double angle) { // Turn based on button value
 	if (btn || gyroTurning) {
 		if (angle < 0) {
-			if (ahrs->GetYaw() > angle) {
+			if (ahrs->GetYaw() > angle) { // Turn counterclockwise
 				gyroTurning = true;
 				controlOverride = true;
-				SetLeftSpeed(-1.0);
-				SetRightSpeed(1.0);
+				SetLeftSpeed(-speed);
+				SetRightSpeed(speed);
 			}
 			else {
 				StopMotors();
+				gyroTurning = false;
 				controlOverride = false;
 			}
+		}
+		else {
+			if (ahrs->GetYaw() < angle) { // Turn clockwise
+				gyroTurning = true;
+				controlOverride = true;
+				SetLeftSpeed(speed);
+				SetRightSpeed(-speed);
+			}
+			else {
+				StopMotors();
+				gyroTurning = false;
+				controlOverride = false;
+			}
+		}
+	}
+}
+
+void Robot::GyroTurn(int pov, float speed) { // Turn based on POV
+	/*
+	 * Get the direction of the POV, then turn at speed to the angle relative to the robot
+	 */
+	if (pov == 0 || gyroTurning) { // Turn 90 degrees clockwise
+		if (ahrs->GetYaw() > -90) {
+			gyroTurning = true; // Allows us to continue turning to the angle if pov is released
+			controlOverride = true; // Prevents tank drive control during turn
+			SetLeftSpeed(speed);
+			SetRightSpeed(-speed);
+		}
+		else {
+			StopMotors();
+			gyroTurning = false; // Stop turning if POV released
+			controlOverride = false; // Return manual control of drive
+			ahrs->Reset(); // Reset yaw to zero
+		}
+	}
+	else if (pov == 270 || gyroTurning) { // Turn 180 degrees clockwise
+		if (ahrs->GetYaw() < 180) {
+			gyroTurning = true;
+			controlOverride = true;
+			SetLeftSpeed(speed);
+			SetRightSpeed(-speed);
+		}
+		else {
+			StopMotors();
+			gyroTurning = false;
+			controlOverride = false;
+			ahrs->Reset();
+		}
+	}
+	else if (pov == 180 || gyroTurning) { // Turn 90 degrees counterclockwise
+		if (ahrs->GetYaw() < 90) {
+			gyroTurning = true;
+			controlOverride = true;
+			SetLeftSpeed(-speed);
+			SetRightSpeed(speed);
+		}
+		else {
+			StopMotors();
+			gyroTurning = false;
+			controlOverride = false;
+			ahrs->Reset();
 		}
 	}
 }

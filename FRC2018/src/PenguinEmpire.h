@@ -75,6 +75,7 @@ public:
 	void StopMotors();
 	void TankDrive();
 	void GyroTurn(bool btn, float speed, double angle);
+	void GyroTurn(int pov, float speed);
 
 	// Test
 	void TestInit();
