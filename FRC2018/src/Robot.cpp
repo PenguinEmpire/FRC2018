@@ -271,7 +271,7 @@ void Robot::GyroTurn(int pov, float speed) { // Turn based on POV
 			StopMotors();
 			gyroTurning = false; // Stop turning if POV released
 			controlOverride = false; // Return manual control of drive
-			ahrs->Reset(); // Reset yaw to zero
+			ahrs->ZeroYaw(); // Reset yaw to zero
 		}
 	}
 	else if (pov == 180 || gyroTurning) { // Turn 180 degrees clockwise
@@ -285,7 +285,7 @@ void Robot::GyroTurn(int pov, float speed) { // Turn based on POV
 			StopMotors();
 			gyroTurning = false;
 			controlOverride = false;
-			ahrs->Reset();
+			ahrs->ZeroYaw(); // Reset yaw to zero
 		}
 	}
 	else if (pov == 270 || gyroTurning) { // Turn 90 degrees counterclockwise
@@ -299,7 +299,7 @@ void Robot::GyroTurn(int pov, float speed) { // Turn based on POV
 			StopMotors();
 			gyroTurning = false;
 			controlOverride = false;
-			ahrs->Reset();
+			ahrs->ZeroYaw(); // Reset yaw to zero
 		}
 	}
 }
