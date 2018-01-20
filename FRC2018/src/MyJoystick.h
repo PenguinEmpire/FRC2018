@@ -22,16 +22,16 @@ public:
 	// Setup
 	MyJoystick();
 	virtual ~MyJoystick();
-	void init(Joystick* theJoystick);
+	void Init(Joystick* theJoystick);
 
 	// Read values
-	void readJoystick();
-	bool readButton(int buttonNumber);
-	float checkLeftStickX();
-	float checkLeftStickY();
-	float checkRightStickX();
-	float checkRightStickY();
-	int getPOV();
+	void ReadJoystick();
+	bool ReadButton(int buttonNumber);
+	float CheckLeftStickX();
+	float CheckLeftStickY();
+	float CheckRightStickX();
+	float CheckRightStickY();
+	int GetPOV();
 };
 
 #endif /* SRC_MYJOYSTICK_H_ */

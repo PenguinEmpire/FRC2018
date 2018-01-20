@@ -132,22 +132,22 @@ void Robot::RightAuto() {
 
 void Robot::TeleopInit() { // Runs at start of teleoperated phase, only once
 	// Point MyJoysticks to Joysticks
-	m_left.init(&leftStick);
-	m_right.init(&rightStick);
-	m_handheld.init(&handheld);
+	m_left.Init(&leftStick);
+	m_right.Init(&rightStick);
+	m_handheld.Init(&handheld);
 }
 
 void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated phase - do not put loops here! Only teleop function calls!
 	// Read in button value changes at start of teleop iteration
-	m_left.readJoystick();
-	m_right.readJoystick();
-	m_handheld.readJoystick();
+	m_left.ReadJoystick();
+	m_right.ReadJoystick();
+	m_handheld.ReadJoystick();
 
 	if (!controlOverride) {
 		TankDrive();
 	}
 
-	GyroTurn(m_left.getPOV(), 0.65);
+	GyroTurn(m_left.GetPOV(), 0.65);
 }
 
 /*
