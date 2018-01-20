@@ -15,27 +15,27 @@
 class Robot : public IterativeRobot {
 public:
 // Components and Systems
-	Joystick left, right, handheld; // Joysticks
-	MyJoystick m_left, m_right, m_handheld;
+	Joystick leftStick, rightStick, handheld; // Joysticks
+	MyJoystick m_left, m_right, m_handheld; // Button reading for Joysticks
 	Spark l1, l2, r1, r2; // Drive motor controllers
-	AHRS *ahrs;
+	AHRS *ahrs; // Purple sensor board
 
 // Values and Structures
-	bool leftswitch;
-	bool leftscale;
+	bool leftSwitch;
+	bool leftScale;
 	bool controlOverride;
 	bool gyroTurning;
 
 	enum FieldPosition { // Used for autonomous
-		Left,
-		Center,
-		Right
+		leftPos,
+		centerPos,
+		rightPos
 	} fpos;
 
 	enum StepType { // Used for autonomous
 		reset,
-		encodermove,
-		gyroturn
+		encoderMove,
+		gyroTurn
 	};
 
 	struct Step {

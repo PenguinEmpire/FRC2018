@@ -18,22 +18,22 @@ const int usb2 = 2;
 
 
 Robot::Robot() : // Robot constructor - Initialize all subsystem and component classes here
-	left(usb0),
-	right(usb1),
+	leftStick(usb0),
+	rightStick(usb1),
 	handheld(usb2),
 	l1(pwm0),
 	l2(pwm1),
 	r1(pwm2),
 	r2(pwm3)
 {
-	leftswitch = false;
-	leftscale = false;
+	leftSwitch = false;
+	leftScale = false;
 	controlOverride = false;
 	gyroTurning = false;
 
 	ahrs = new AHRS(SerialPort::kMXP);
 
-	fpos = Center;
+	fpos = centerPos;
 
 	autosteps = {};
 	curstep = 0;
@@ -57,13 +57,13 @@ void Robot::RobotInit() { // Runs only when robot code starts initially
 void Robot::AutonomousInit() { // Runs at start of autonomous phase, only once
 	CheckSide();
 	CheckPos();
-	if (fpos == Left) {
+	if (fpos == leftPos) {
 		LeftAuto();
 	}
-	else if (fpos == Center) {
+	else if (fpos == centerPos) {
 		CenterAuto();
 	}
-	else if (fpos == Right) {
+	else if (fpos == rightPos) {
 		RightAuto();
 	}
 }
@@ -88,15 +88,15 @@ void Robot::CheckSide() {
 	std::string gamedata;
 	gamedata = frc::DriverStation::GetInstance().GetGameSpecificMessage();
 	if (gamedata[0] == 'L') {
-		leftswitch = true;
+		leftSwitch = true;
 	} else {
-		leftswitch = false;
+		leftSwitch = false;
 	}
 
 	if (gamedata[1] == 'L') {
-		leftscale = true;
+		leftScale = true;
 	} else {
-		leftscale = false;
+		leftScale = false;
 	}
 }
 
@@ -132,8 +132,8 @@ void Robot::RightAuto() {
 
 void Robot::TeleopInit() { // Runs at start of teleoperated phase, only once
 	// Point MyJoysticks to Joysticks
-	m_left.init(&left);
-	m_right.init(&right);
+	m_left.init(&leftStick);
+	m_right.init(&rightStick);
 	m_handheld.init(&handheld);
 }
 
@@ -180,8 +180,8 @@ void Robot::TankDrive() {
 	double leftInput;
 	double rightInput;
 
-	leftInput = left.GetRawAxis(1);
-	rightInput = right.GetRawAxis(1);
+	leftInput = leftStick.GetRawAxis(1);
+	rightInput = rightStick.GetRawAxis(1);
 
 	double inputMultiplier = 0.65;
 
@@ -310,12 +310,21 @@ void Robot::Step::Run() {
 	/*
 	 * Checks what the step is, then reads in the arguments and executes it
 	 */
+	switch (type) {
+	case reset:
+		break;
+	case encoderMove:
+		break;
+	case gyroTurn:
+		break;
+	
+	}
 	if (type == reset) {
 		/*
 		 * Stop stuff
 		 */
 	}
-	else if (type == encodermove) {
+	else if (type == encoderMove) {
 		if (setup) {
 			/*
 			 * Stop stuff and initialize
@@ -336,7 +345,7 @@ void Robot::Step::Run() {
 		 * Move at speed until encoders reach target value
 		 */
 	}
-	else if (type == gyroturn) {
+	else if (type == gyroTurn) {
 		if (setup) {
 			/*
 			 * Stop stuff
