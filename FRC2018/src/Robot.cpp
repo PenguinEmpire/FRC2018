@@ -232,6 +232,7 @@ void Robot::TankDrive() {
 void Robot::GyroTurn(bool btn, float speed, double angle) { // Turn based on button value
 	if (btn || gyroTurning) {
 		latestYaw = ahrs->GetYaw();
+		SmartDashboard::PutNumber("Target Angle", angle);
 		if (angle < 0) {
 			if (ahrs->GetYaw() > angle) { // Turn counterclockwise
 				gyroTurning = true;
