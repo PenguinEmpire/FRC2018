@@ -167,9 +167,9 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 		TankDrive();
 	}
 
-	GyroTurn(m_left.ReadButton(11), 0.8, 90);
-	GyroTurn(m_left.ReadButton(10), 0.8, 180);
-	GyroTurn(m_left.ReadButton(12), 0.8, -90);
+	GyroTurn(m_left.ReadButton(11), 0.7, 90);
+	GyroTurn(m_left.ReadButton(10), 0.7, 180);
+	GyroTurn(m_left.ReadButton(12), 0.7, -90);
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
 
 	//Send dashboard values
@@ -178,18 +178,6 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	SmartDashboard::PutBoolean("-90 Btn", m_left.ReadButton(11));
 	SmartDashboard::PutBoolean("180 Btn", m_left.ReadButton(10));
 	SmartDashboard::PutBoolean("90 Btn", m_left.ReadButton(12));
-
-	bool leftConflict = false;
-	bool rightConflict = false;
-	if ((l1.Get() < 0 && l2.Get() > 0) || (l1.Get() > 0 && l2.Get() < 0)) {
-		leftConflict = true;
-	}
-	else if ((r1.Get() < 0 && r2.Get() > 0) || (r1.Get() > 0 && r2.Get() < 0)) {
-		rightConflict = true;
-	}
-	SmartDashboard::PutBoolean("Conflict Left", leftConflict);
-	SmartDashboard::PutBoolean("Conflict Right", rightConflict);
-
 }
 
 /*
@@ -228,21 +216,24 @@ void Robot::TankDrive() {
 
 	double inputMultiplier = 0.65;
 
-	if(fabs(leftInput) > 0.3) {
+	if(fabs(leftInput) > 0.3 && fabs(leftInput) < 0.6) {
 		SetLeftSpeed(leftInput * -inputMultiplier);
 	}
-	else
-	{
+	else if (fabs(leftInput) >= 0.6) {
+		SetLeftSpeed(leftInput);
+	}
+	else {
 		SetLeftSpeed(0.0);
 	}
 
-	if(fabs(rightInput) > 0.3) {
+	if(fabs(rightInput) > 0.3 && fabs(rightInput) < 0.6) {
 		SetRightSpeed(rightInput * -inputMultiplier);
 	}
-	else
-	{
-		r1.Set(0);
-		r2.Set(0);
+	else if (fabs(rightInput) >= 0.6) {
+		SetRightSpeed(rightInput);
+	}
+	else {
+		SetRightSpeed(0.0);
 	}
 }
 
