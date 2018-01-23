@@ -216,21 +216,21 @@ void Robot::TankDrive() {
 
 	double inputMultiplier = 0.65;
 
-	if(fabs(leftInput) > 0.3 && fabs(leftInput) < 0.6) {
+	if(fabs(leftInput) > 0.3 && fabs(leftInput) < 0.7) {
 		SetLeftSpeed(leftInput * -inputMultiplier);
 	}
-	else if (fabs(leftInput) >= 0.6) {
-		SetLeftSpeed(leftInput);
+	else if (fabs(leftInput) >= 0.7) {
+		SetLeftSpeed(-leftInput);
 	}
 	else {
 		SetLeftSpeed(0.0);
 	}
 
-	if(fabs(rightInput) > 0.3 && fabs(rightInput) < 0.6) {
+	if(fabs(rightInput) > 0.3 && fabs(rightInput) < 0.7) {
 		SetRightSpeed(rightInput * -inputMultiplier);
 	}
-	else if (fabs(rightInput) >= 0.6) {
-		SetRightSpeed(rightInput);
+	else if (fabs(rightInput) >= 0.7) {
+		SetRightSpeed(-rightInput);
 	}
 	else {
 		SetRightSpeed(0.0);
@@ -360,10 +360,10 @@ void Robot::ShiftGears(std::string dir) {
 	 */
 	DoubleSolenoid::Value state;
 	if (dir == "up") {
-		state = DoubleSolenoid::kForward;
+		state = DoubleSolenoid::kReverse;
 	}
 	else {
-		state = DoubleSolenoid::kReverse;
+		state = DoubleSolenoid::kForward;
 	}
 
 	leftGearbox.Set(state);

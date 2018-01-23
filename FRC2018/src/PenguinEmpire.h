@@ -82,8 +82,9 @@ public:
 	void SetRightSpeed(float speed);
 	void StopMotors();
 	void TankDrive();
-	void GyroTurn(bool btn, float speed, float angle);
-	void GyroTurn(int pov, float speed);
+	void GyroTurn(bool btn, float speed, float angle); // Deprecated
+	void GyroTurn(int pov, float speed); // Deprecated
+	void GyroLeft(float speed, float angle);
 	void ManualShiftGears(bool upBtn, bool downBtn);
 
 	// Test
