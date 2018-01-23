@@ -174,6 +174,9 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	//Send dashboard values
 	SmartDashboard::PutNumber("Gyro Turning Yaw", latestYaw);
 	SmartDashboard::PutNumber("Current Yaw", ahrs->GetYaw());
+	SmartDashboard::PutBoolean("-90 Btn", m_left.ReadButton(11));
+	SmartDashboard::PutBoolean("180 Btn", m_left.ReadButton(10));
+	SmartDashboard::PutBoolean("90 Btn", m_left.ReadButton(12));
 }
 
 /*
