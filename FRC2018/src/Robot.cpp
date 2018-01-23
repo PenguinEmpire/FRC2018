@@ -178,6 +178,18 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	SmartDashboard::PutBoolean("-90 Btn", m_left.ReadButton(11));
 	SmartDashboard::PutBoolean("180 Btn", m_left.ReadButton(10));
 	SmartDashboard::PutBoolean("90 Btn", m_left.ReadButton(12));
+
+	bool leftConflict = false;
+	bool rightConflict = false;
+	if ((l1.Get() < 0 && l2.Get() > 0) || (l1.Get() > 0 && l2.Get() < 0)) {
+		leftConflict = true;
+	}
+	else if ((r1.Get() < 0 && r2.Get() > 0) || (r1.Get() > 0 && r2.Get() < 0)) {
+		rightConflict = true;
+	}
+	SmartDashboard::PutBoolean("Conflict Left", leftConflict);
+	SmartDashboard::PutBoolean("Conflict Right", rightConflict);
+
 }
 
 /*
