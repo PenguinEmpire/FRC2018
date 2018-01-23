@@ -44,6 +44,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	pressureStatus = false;
 	current = 0.0;
 	latestYaw = 0;
+	turnSetup = true;
 
 	ahrs = new AHRS(SerialPort::kMXP);
 
@@ -166,9 +167,9 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 		TankDrive();
 	}
 
-	GyroTurn(m_left.ReadButton(11), 1.0, -90);
-	GyroTurn(m_left.ReadButton(10), 1.0, -179);
-	GyroTurn(m_left.ReadButton(12), 1.0, 90);
+	GyroTurn(m_left.ReadButton(11), 1.0, 90);
+	GyroTurn(m_left.ReadButton(10), 1.0, 180);
+	GyroTurn(m_left.ReadButton(12), 1.0, -90);
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
 
 	//Send dashboard values
@@ -237,6 +238,10 @@ void Robot::GyroTurn(bool btn, float speed, float angle) { // Turn based on butt
 	if (btn || gyroTurning) {
 		latestYaw = ahrs->GetYaw();
 		SmartDashboard::PutNumber("Target Angle", angle);
+		if (turnSetup) {
+			ahrs->ZeroYaw();
+			turnSetup = false;
+		}
 		if (angle < 0) {
 			if (ahrs->GetYaw() > angle) { // Turn counterclockwise
 				gyroTurning = true;
@@ -248,6 +253,8 @@ void Robot::GyroTurn(bool btn, float speed, float angle) { // Turn based on butt
 				StopMotors();
 				gyroTurning = false;
 				controlOverride = false;
+				ahrs->ZeroYaw();
+				turnSetup = true;
 			}
 		}
 		else {
@@ -261,11 +268,10 @@ void Robot::GyroTurn(bool btn, float speed, float angle) { // Turn based on butt
 				StopMotors();
 				gyroTurning = false;
 				controlOverride = false;
+				ahrs->ZeroYaw();
+				turnSetup = true;
 			}
 		}
-	}
-	else {
-		ahrs->ZeroYaw();
 	}
 }
 

@@ -32,6 +32,7 @@ public:
 	bool pressureStatus;
 	float current;
 	int latestYaw;
+	bool turnSetup;
 
 	enum FieldPosition { // Used for autonomous
 		leftPos,
