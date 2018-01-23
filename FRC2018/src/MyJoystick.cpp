@@ -7,77 +7,58 @@
 #include "WPILib.h"
 #include <MyJoystick.h>
 
-#define MAXBUTTONS 10
-
+#define maxButtons 12
 MyJoystick::MyJoystick() {
 
 }
 
-MyJoystick::~MyJoystick() // Delete all pointers in button array
-{
-	if( m_Joystick != NULL)
-	{
-		for (int i = 0; i < MAXBUTTONS; i++)
-		{
-			if( buttonArray[i] != NULL )
-			{
+MyJoystick::~MyJoystick() { // Delete all pointers in button array
+	if( m_Joystick != NULL) {
+		for (int i = 0; i < maxButtons; i++) {
+			if( buttonArray[i] != NULL ) {
 				delete buttonArray[i];
 				buttonArray[i] = NULL;
 			}
 		}
-//		delete m_joystick;
 		m_Joystick = NULL;
-
 	}
 }
 
-void MyJoystick::init(Joystick* theJoystick) // Create list of buttons from referenced Joystick
-{
+void MyJoystick::Init(Joystick* theJoystick) { // Create list of buttons from referenced Joystick
 	m_Joystick = theJoystick;
 
-	for (int i = 0; i < MAXBUTTONS; i++)
-	{
+	for (int i = 0; i < maxButtons; i++) {
 		buttonArray[i] = new JoystickButton(m_Joystick, i + 1);
 	}
 }
 
-void MyJoystick::readJoystick() // Check all buttons to update values
-{
-	// get all the button values
-	for (int i = 0; i < MAXBUTTONS; i++)
-	{
+void MyJoystick::ReadJoystick() { // Check all buttons to update values
+	for (int i = 0; i < maxButtons; i++) {
 		buttonValueArray[i] = buttonArray[i]->Get();
 	}
 }
 
-bool MyJoystick::readButton(int buttonNumber){ // Retrieve specific button value from value array
-	// get the correct button value
-
+bool MyJoystick::ReadButton(int buttonNumber) { // Retrieve specific button value from value array
 	return buttonValueArray[buttonNumber - 1];
 }
 
-float MyJoystick::checkLeftStickX() // Get Joystick X-axis (left X on gamepad)
-{
+float MyJoystick::CheckLeftStickX() { // Get Joystick X-axis (left X on gamepad)
 	return m_Joystick->GetX();
 }
 
-float MyJoystick::checkLeftStickY() // Get Joystick Y-axis (left Y on gamepad)
-{
+float MyJoystick::CheckLeftStickY() { // Get Joystick Y-axis (left Y on gamepad)
 	return m_Joystick->GetY()*-1;
 }
 
-float MyJoystick::checkRightStickX() // Get Joystick Z-axis (right X on gamepad)
-{
+float MyJoystick::CheckRightStickX() { // Get Joystick Z-axis (right X on gamepad)
 	return m_Joystick->GetZ();
 }
 
-float MyJoystick::checkRightStickY() // Get Joystick throttle (right Y on gamepad)
-{
+float MyJoystick::CheckRightStickY() { // Get Joystick throttle (right Y on gamepad)
 	return m_Joystick->GetThrottle();
 }
 
-int MyJoystick::getPOV() // Get d-pad direction
-{
+int MyJoystick::GetPOV() { // Get d-pad direction
 	return m_Joystick->GetPOV();
 }
 

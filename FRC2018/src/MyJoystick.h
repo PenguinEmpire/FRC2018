@@ -10,28 +10,28 @@
 #ifndef SRC_MYJOYSTICK_H_
 #define SRC_MYJOYSTICK_H_
 
-#define MAXBUTTONS 10
+#define maxButtons 12
 
 class MyJoystick {
 private:
 	Joystick* m_Joystick = NULL;			// Pointer to existing Joystick object to read from
-	JoystickButton* buttonArray[MAXBUTTONS]; // List of buttons on referenced Joystick
-	bool buttonValueArray[MAXBUTTONS];		 // List of values corresponding to buttons on the same indices of above array
+	JoystickButton* buttonArray[maxButtons]; // List of buttons on referenced Joystick
+	bool buttonValueArray[maxButtons];		 // List of values corresponding to buttons on the same indices of above array
 public:
 
 	// Setup
 	MyJoystick();
 	virtual ~MyJoystick();
-	void init(Joystick* theJoystick);
+	void Init(Joystick* theJoystick);
 
 	// Read values
-	void readJoystick();
-	bool readButton(int buttonNumber);
-	float checkLeftStickX();
-	float checkLeftStickY();
-	float checkRightStickX();
-	float checkRightStickY();
-	int getPOV();
+	void ReadJoystick();
+	bool ReadButton(int buttonNumber);
+	float CheckLeftStickX();
+	float CheckLeftStickY();
+	float CheckRightStickX();
+	float CheckRightStickY();
+	int GetPOV();
 };
 
 #endif /* SRC_MYJOYSTICK_H_ */
