@@ -166,9 +166,9 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 		TankDrive();
 	}
 
-	GyroTurn(m_left.ReadButton(11), -90, 1.0);
-	GyroTurn(m_left.ReadButton(10), -179, 1.0);
-	GyroTurn(m_left.ReadButton(12), 90, 1.0);
+	GyroTurn(m_left.ReadButton(11), 1.0, -90);
+	GyroTurn(m_left.ReadButton(10), 1.0, -179);
+	GyroTurn(m_left.ReadButton(12), 1.0, 90);
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
 
 	//Send dashboard values
@@ -185,7 +185,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
  * SetRightSpeed
  * TankDrive
  * GyroTurn
- * ManualShiftGears - wip
+ * ManualShiftGears
  */
 void Robot::SetLeftSpeed(float speed) {
 	l1.Set(speed);
