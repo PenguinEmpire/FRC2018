@@ -81,7 +81,7 @@ public:
 	void SetRightSpeed(float speed);
 	void StopMotors();
 	void TankDrive();
-	void GyroTurn(bool btn, float speed, double angle);
+	void GyroTurn(bool btn, float speed, float angle);
 	void GyroTurn(int pov, float speed);
 	void ManualShiftGears(bool upBtn, bool downBtn);
 
