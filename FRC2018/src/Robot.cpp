@@ -394,8 +394,8 @@ void Robot::RunCubeIO(bool run, Direction dir) {
 			rightIO.Set(0.65);
 		}
 		else if (dir == backward) {
-			leftIO.Set(0.65);
-			rightIO.Set(0.65);
+			leftIO.Set(-0.65);
+			rightIO.Set(-0.65);
 		}
 	}
 	else {
