@@ -181,8 +181,8 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	GyroTurn(m_left.ReadButton(10), 0.7, 180);
 	GyroTurn(m_left.ReadButton(12), 0.7, -90);
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
-	RunCubeIO(m_left.ReadButton(1), backward); // Cube intake
-	RunCubeIO(m_right.ReadButton(1), forward); // Cube outtake
+	RunCubeIO(m_right.ReadButton(2), forward); // Cube intake
+	RunCubeIO(m_right.ReadButton(1), backward); // Cube outtake
 
 	//Send dashboard values
 	SmartDashboard::PutNumber("Gyro Turning Yaw", latestYaw);
@@ -390,10 +390,12 @@ void Robot::RunCubeIO(bool run, Direction dir) {
 	 */
 	if (run) {
 		if (dir == forward) {
+			SmartDashboard::PutString("IO Direction", "Out");
 			leftIO.Set(0.65);
 			rightIO.Set(0.65);
 		}
 		else if (dir == backward) {
+			SmartDashboard::PutString("IO Direction", "In");
 			leftIO.Set(-0.65);
 			rightIO.Set(-0.65);
 		}
