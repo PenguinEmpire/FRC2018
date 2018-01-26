@@ -18,6 +18,8 @@ const int pwm0 = 0;
 const int pwm1 = 1;
 const int pwm2 = 2;
 const int pwm3 = 3;
+const int pwm4 = 4;
+const int pwm5 = 5;
 
 const int usb0 = 0;
 const int usb1 = 1;
@@ -32,6 +34,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	l2(pwm1),
 	r1(pwm2),
 	r2(pwm3),
+	leftIO(pwm4),
+	rightIO(pwm5),
 	compressor(pcm0),
 	leftGearbox(pcm0, pch0, pch1),
 	rightGearbox(pcm0, pch2, pch3)
@@ -65,8 +69,14 @@ Robot::~Robot() { // Robot destructor - Delete pointer values here
 }
 
 void Robot::RobotInit() { // Runs only when robot code starts initially
+	// Set Spark inversion
+	l1.SetInverted(false);
+	l2.SetInverted(false);
 	r1.SetInverted(true);
 	r2.SetInverted(true);
+	leftIO.SetInverted(false);
+	rightIO.SetInverted(false);
+
 
 	compressorEnabled = compressor.Enabled();
 	pressureStatus = compressor.GetPressureSwitchValue();
@@ -171,6 +181,8 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	GyroTurn(m_left.ReadButton(10), 0.7, 180);
 	GyroTurn(m_left.ReadButton(12), 0.7, -90);
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
+	RunCubeIO(m_left.ReadButton(1), backward); // Cube intake
+	RunCubeIO(m_right.ReadButton(1), forward); // Cube outtake
 
 	//Send dashboard values
 	SmartDashboard::PutNumber("Gyro Turning Yaw", latestYaw);
@@ -187,6 +199,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
  * TankDrive
  * GyroTurn
  * ManualShiftGears
+ * RunCubeIO
  */
 void Robot::SetLeftSpeed(float speed) {
 	l1.Set(speed);
@@ -328,11 +341,11 @@ void Robot::GyroTurn(int pov, float speed) { // Turn based on POV
 
 void Robot::ManualShiftGears(bool upBtn, bool downBtn) {
 	if (upBtn) {
-		ShiftGears("up");
+		ShiftGears(up);
 	}
 
 	if (downBtn) {
-		ShiftGears("down");
+		ShiftGears(down);
 	}
 }
 
@@ -351,15 +364,16 @@ void Robot::TestPeriodic() { // Looped through iteratively during test phase - d
 
 /*
  * Other Functions:
- * ShiftGears - wip
+ * ShiftGears
+ * RunCubeIO
  */
 
-void Robot::ShiftGears(std::string dir) {
+void Robot::ShiftGears(Direction dir) {
 	/*
 	 * Initiate or uninitiate gearboxes to change gear ratio
 	 */
 	DoubleSolenoid::Value state;
-	if (dir == "up") {
+	if (dir == up) {
 		state = DoubleSolenoid::kReverse;
 	}
 	else {
@@ -368,6 +382,26 @@ void Robot::ShiftGears(std::string dir) {
 
 	leftGearbox.Set(state);
 	rightGearbox.Set(state);
+}
+
+void Robot::RunCubeIO(bool run, Direction dir) {
+	/*
+	 * Set IO motors to run forward or backward
+	 */
+	if (run) {
+		if (dir == forward) {
+			leftIO.Set(0.65);
+			rightIO.Set(0.65);
+		}
+		else if (dir == backward) {
+			leftIO.Set(0.65);
+			rightIO.Set(0.65);
+		}
+	}
+	else {
+		leftIO.Set(0.0);
+		rightIO.Set(0.0);
+	}
 }
 
 Robot::Step::Step(Robot *r, StepType steptype, std::vector<double> parameters) : robot(r) {

@@ -19,6 +19,7 @@ public:
 	Joystick leftStick, rightStick, handheld; // Joysticks
 	MyJoystick m_left, m_right, m_handheld; // Button reading for Joysticks
 	Spark l1, l2, r1, r2; // Drive motor controllers
+	Spark leftIO, rightIO; // IO motor controllers
 	AHRS *ahrs; // Purple sensor board
 	Compressor compressor;
 	DoubleSolenoid leftGearbox, rightGearbox;
@@ -44,6 +45,15 @@ public:
 		reset,
 		encoderMove,
 		gyroTurn
+	};
+
+	enum Direction {
+		up,
+		down,
+		left,
+		right,
+		forward,
+		backward
 	};
 
 	struct Step {
@@ -91,8 +101,10 @@ public:
 	void TestInit();
 	void TestPeriodic();
 
-	//Other
-	void ShiftGears(std::string dir);
+	//Other - functions that run in multiple states
+	void ShiftGears(Direction dir);
+	void RunCubeIO(bool run, Direction dir);
+
 };
 
 #endif /* SRC_PENGUINEMPIRE_H_ */
