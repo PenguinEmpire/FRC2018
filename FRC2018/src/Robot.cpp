@@ -75,7 +75,7 @@ void Robot::RobotInit() { // Runs only when robot code starts initially
 	r1.SetInverted(true);
 	r2.SetInverted(true);
 	leftIO.SetInverted(false);
-	rightIO.SetInverted(false);
+	rightIO.SetInverted(true);
 
 
 	compressorEnabled = compressor.Enabled();
