@@ -194,9 +194,9 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	GyroTurn(m_left.ReadButton(10), 0.7, 180);
 	GyroTurn(m_left.ReadButton(12), 0.7, -90);
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
-	ManualShiftLift(m_right.ReadButton(5), m_right.ReadButton(3));
+	ManualShiftLift(m_left.ReadButton(6), m_left.ReadButton(4));
 	ManualCubeIO(m_left.ReadButton(1), m_right.ReadButton(1));
-	RunLifter(m_left.ReadButton(6), m_left.ReadButton(4));
+	RunLifter(m_right.ReadButton(5), m_right.ReadButton(3));
 
 
 	//Send dashboard values
