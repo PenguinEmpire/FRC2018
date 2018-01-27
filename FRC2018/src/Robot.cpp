@@ -11,6 +11,8 @@ const int pch0 = 0;
 const int pch1 = 1;
 const int pch2 = 2;
 const int pch3 = 3;
+const int pch4 = 4;
+const int pch5 = 5;
 
 const int pcm0 = 0;
 
@@ -42,7 +44,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	lift2(pwm7),
 	compressor(pcm0),
 	leftGearbox(pcm0, pch0, pch1),
-	rightGearbox(pcm0, pch2, pch3)
+	rightGearbox(pcm0, pch2, pch3),
+	liftGearbox(pcm0, pch4, pch5)
 {
 	leftSwitch = false;
 	leftScale = false;
@@ -191,7 +194,10 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	GyroTurn(m_left.ReadButton(10), 0.7, 180);
 	GyroTurn(m_left.ReadButton(12), 0.7, -90);
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
+	ManualShiftLift(m_right.ReadButton(5), m_right.ReadButton(3));
 	ManualCubeIO(m_left.ReadButton(1), m_right.ReadButton(1));
+	RunLifter(m_left.ReadButton(6), m_left.ReadButton(4));
+
 
 	//Send dashboard values
 	SmartDashboard::PutNumber("Gyro Turning Yaw", latestYaw);
@@ -358,6 +364,16 @@ void Robot::ManualShiftGears(bool upBtn, bool downBtn) {
 	}
 }
 
+void Robot::ManualShiftLift(bool upBtn, bool downBtn) {
+	if (upBtn) {
+		ShiftLift(up);
+	}
+
+	if (downBtn) {
+		ShiftLift(down);
+	}
+}
+
 void Robot::ManualCubeIO(bool in, bool out) {
 	float inSpeed = -0.3;
 	float outSpeed = 0.5;
@@ -392,8 +408,11 @@ void Robot::TestPeriodic() { // Looped through iteratively during test phase - d
 /*
  * Other Functions:
  * ShiftGears
+ * ShiftLift
  * RunCubeIO
+ * RunLifter
  */
+
 void Robot::ShiftGears(Direction dir) {
 	/*
 	 * Initiate or uninitiate gearboxes to change gear ratio
@@ -408,6 +427,22 @@ void Robot::ShiftGears(Direction dir) {
 
 	leftGearbox.Set(state);
 	rightGearbox.Set(state);
+}
+
+void Robot::ShiftLift(Direction dir) {
+	/*
+	 * Initiate or uninitiate lifter gearbox
+	 */
+
+	DoubleSolenoid::Value state;
+	if (dir == up) {
+		state = DoubleSolenoid::kReverse;
+	}
+	else {
+		state = DoubleSolenoid::kForward;
+	}
+
+	liftGearbox.Set(state);
 }
 
 void Robot::RunCubeIO(Direction dir) {
@@ -442,7 +477,6 @@ void Robot::RunLifter(bool up, bool down) {
 		lift1.Set(0.0);
 		lift2.Set(0.0);
 	}
-
 }
 
 Robot::Step::Step(Robot *r, StepType steptype, std::vector<double> parameters) : robot(r) {

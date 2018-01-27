@@ -23,7 +23,7 @@ public:
 	Spark lift1, lift2; // Lifter motor controllers
 	AHRS *ahrs; // Purple sensor board
 	Compressor compressor;
-	DoubleSolenoid leftGearbox, rightGearbox;
+	DoubleSolenoid leftGearbox, rightGearbox, liftGearbox;
 	Timer* timer;
 
 // Values and Structures
@@ -100,6 +100,7 @@ public:
 	void GyroTurn(int pov, float speed); // Deprecated
 	void GyroLeft(float speed, float angle);
 	void ManualShiftGears(bool upBtn, bool downBtn);
+	void ManualShiftLift(bool upBtn, bool downBtn);
 	void ManualCubeIO(bool inBtn, bool outBtn);
 
 	// Test
@@ -108,6 +109,7 @@ public:
 
 	//Other - functions that run in multiple states
 	void ShiftGears(Direction dir);
+	void ShiftLift(Direction dir);
 	void RunCubeIO(Direction dir);
 	void RunLifter(bool up, bool down);
 
