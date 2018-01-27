@@ -62,6 +62,9 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	l2.SetExpiration(0.1);
 	r1.SetExpiration(0.1);
 	r2.SetExpiration(0.1);
+
+	timer = new Timer();
+	testStep = 0;
 }
 
 Robot::~Robot() { // Robot destructor - Delete pointer values here
@@ -74,8 +77,8 @@ void Robot::RobotInit() { // Runs only when robot code starts initially
 	l2.SetInverted(false);
 	r1.SetInverted(true);
 	r2.SetInverted(true);
-	leftIO.SetInverted(false);
-	rightIO.SetInverted(true);
+	leftIO.SetInverted(true);
+	rightIO.SetInverted(false);
 
 
 	compressorEnabled = compressor.Enabled();
@@ -85,21 +88,21 @@ void Robot::RobotInit() { // Runs only when robot code starts initially
 }
 
 void Robot::AutonomousInit() { // Runs at start of autonomous phase, only once
-	CheckSide();
-	CheckPos();
-	if (fpos == leftPos) {
-		LeftAuto();
-	}
-	else if (fpos == centerPos) {
-		CenterAuto();
-	}
-	else if (fpos == rightPos) {
-		RightAuto();
-	}
+//	CheckSide();
+//	CheckPos();
+//	if (fpos == leftPos) {
+//		LeftAuto();
+//	}
+//	else if (fpos == centerPos) {
+//		CenterAuto();
+//	}
+//	else if (fpos == rightPos) {
+//		RightAuto();
+//	}
 }
 
 void Robot::AutonomousPeriodic() { // Looped through iteratively during autonomous phase - do not put loops here!
-
+	RunCubeIO(backward);
 }
 
 /*
@@ -181,8 +184,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	GyroTurn(m_left.ReadButton(10), 0.7, 180);
 	GyroTurn(m_left.ReadButton(12), 0.7, -90);
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
-	RunCubeIO(m_right.ReadButton(2), forward); // Cube intake
-	RunCubeIO(m_right.ReadButton(1), backward); // Cube outtake
+	ManualCubeIO(m_left.ReadButton(1), m_right.ReadButton(1));
 
 	//Send dashboard values
 	SmartDashboard::PutNumber("Gyro Turning Yaw", latestYaw);
@@ -349,8 +351,23 @@ void Robot::ManualShiftGears(bool upBtn, bool downBtn) {
 	}
 }
 
-void Robot::TestInit() { // Runs at start of test phase, only once
+void Robot::ManualCubeIO(bool inBtn, bool outBtn) {
+	if (inBtn && !outBtn) {
+		leftIO.Set(-0.65);
+		rightIO.Set(-0.65);
+	}
+	else if (!inBtn && outBtn) {
+		leftIO.Set(0.65);
+		rightIO.Set(0.65);
+	}
+	else if (!inBtn && !outBtn) {
+		leftIO.Set(0.0);
+		rightIO.Set(0.0);
+	}
+}
 
+void Robot::TestInit() { // Runs at start of test phase, only once
+//	timer->Start();
 }
 
 void Robot::TestPeriodic() { // Looped through iteratively during test phase - do not put loops here!
@@ -367,7 +384,6 @@ void Robot::TestPeriodic() { // Looped through iteratively during test phase - d
  * ShiftGears
  * RunCubeIO
  */
-
 void Robot::ShiftGears(Direction dir) {
 	/*
 	 * Initiate or uninitiate gearboxes to change gear ratio
@@ -384,25 +400,19 @@ void Robot::ShiftGears(Direction dir) {
 	rightGearbox.Set(state);
 }
 
-void Robot::RunCubeIO(bool run, Direction dir) {
+void Robot::RunCubeIO(Direction dir) {
 	/*
 	 * Set IO motors to run forward or backward
 	 */
-	if (run) {
-		if (dir == forward) {
-			SmartDashboard::PutString("IO Direction", "Out");
-			leftIO.Set(0.65);
-			rightIO.Set(0.65);
-		}
-		else if (dir == backward) {
-			SmartDashboard::PutString("IO Direction", "In");
-			leftIO.Set(-0.65);
-			rightIO.Set(-0.65);
-		}
+	if (dir == forward) {
+		SmartDashboard::PutString("IO Direction", "Out");
+		leftIO.Set(0.65);
+		rightIO.Set(0.65);
 	}
-	else {
-		leftIO.Set(0.0);
-		rightIO.Set(0.0);
+	else if (dir == backward) {
+		SmartDashboard::PutString("IO Direction", "In");
+		leftIO.Set(-0.65);
+		rightIO.Set(-0.65);
 	}
 }
 
@@ -416,6 +426,7 @@ Robot::Step::Step(Robot *r, StepType steptype, std::vector<double> parameters) :
 Robot::Step::~Step() {
 	delete robot;
 }
+
 
 void Robot::Step::Run() {
 	/*

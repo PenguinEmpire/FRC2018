@@ -23,6 +23,7 @@ public:
 	AHRS *ahrs; // Purple sensor board
 	Compressor compressor;
 	DoubleSolenoid leftGearbox, rightGearbox;
+	Timer* timer;
 
 // Values and Structures
 	bool leftSwitch; // Is our color on the left side of the switch?
@@ -34,6 +35,8 @@ public:
 	float current;
 	int latestYaw;
 	bool turnSetup;
+
+	int testStep;
 
 	enum FieldPosition { // Used for autonomous
 		leftPos,
@@ -96,6 +99,7 @@ public:
 	void GyroTurn(int pov, float speed); // Deprecated
 	void GyroLeft(float speed, float angle);
 	void ManualShiftGears(bool upBtn, bool downBtn);
+	void ManualCubeIO(bool inBtn, bool outBtn);
 
 	// Test
 	void TestInit();
@@ -103,7 +107,7 @@ public:
 
 	//Other - functions that run in multiple states
 	void ShiftGears(Direction dir);
-	void RunCubeIO(bool run, Direction dir);
+	void RunCubeIO(Direction dir);
 
 };
 
