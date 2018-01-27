@@ -352,13 +352,15 @@ void Robot::ManualShiftGears(bool upBtn, bool downBtn) {
 }
 
 void Robot::ManualCubeIO(bool inBtn, bool outBtn) {
+	float inSpeed = -0.3;
+	float outSpeed = 0.5;
 	if (inBtn && !outBtn) {
-		leftIO.Set(-0.65);
-		rightIO.Set(-0.65);
+		leftIO.Set(inSpeed);
+		rightIO.Set(inSpeed);
 	}
 	else if (!inBtn && outBtn) {
-		leftIO.Set(0.65);
-		rightIO.Set(0.65);
+		leftIO.Set(outSpeed);
+		rightIO.Set(outSpeed);
 	}
 	else if (!inBtn && !outBtn) {
 		leftIO.Set(0.0);
