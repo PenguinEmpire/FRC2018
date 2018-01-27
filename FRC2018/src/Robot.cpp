@@ -20,6 +20,8 @@ const int pwm2 = 2;
 const int pwm3 = 3;
 const int pwm4 = 4;
 const int pwm5 = 5;
+const int pwm6 = 6;
+const int pwm7 = 7;
 
 const int usb0 = 0;
 const int usb1 = 1;
@@ -36,6 +38,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	r2(pwm3),
 	leftIO(pwm4),
 	rightIO(pwm5),
+	lift1(pwm6),
+	lift2(pwm7),
 	compressor(pcm0),
 	leftGearbox(pcm0, pch0, pch1),
 	rightGearbox(pcm0, pch2, pch3)
@@ -62,6 +66,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	l2.SetExpiration(0.1);
 	r1.SetExpiration(0.1);
 	r2.SetExpiration(0.1);
+	lift1.SetExpiration(0.1);
+	lift2.SetExpiration(0.1);
 
 	timer = new Timer();
 	testStep = 0;
@@ -79,7 +85,8 @@ void Robot::RobotInit() { // Runs only when robot code starts initially
 	r2.SetInverted(true);
 	leftIO.SetInverted(true);
 	rightIO.SetInverted(false);
-
+	lift1.SetInverted(false);
+	lift2.SetInverted(false);
 
 	compressorEnabled = compressor.Enabled();
 	pressureStatus = compressor.GetPressureSwitchValue();
@@ -351,18 +358,19 @@ void Robot::ManualShiftGears(bool upBtn, bool downBtn) {
 	}
 }
 
-void Robot::ManualCubeIO(bool inBtn, bool outBtn) {
+void Robot::ManualCubeIO(bool in, bool out) {
 	float inSpeed = -0.3;
 	float outSpeed = 0.5;
-	if (inBtn && !outBtn) {
+
+	if (in && !out) {
 		leftIO.Set(inSpeed);
 		rightIO.Set(inSpeed);
 	}
-	else if (!inBtn && outBtn) {
+	else if (!in && out) {
 		leftIO.Set(outSpeed);
 		rightIO.Set(outSpeed);
 	}
-	else if (!inBtn && !outBtn) {
+	else if (!in && !out) {
 		leftIO.Set(0.0);
 		rightIO.Set(0.0);
 	}
@@ -416,6 +424,25 @@ void Robot::RunCubeIO(Direction dir) {
 		leftIO.Set(-0.65);
 		rightIO.Set(-0.65);
 	}
+}
+
+void Robot::RunLifter(bool up, bool down) {
+	float upSpeed = 0.65;
+	float downSpeed  = -0.3;
+
+	if (up && !down) {
+		lift1.Set(upSpeed);
+		lift2.Set(upSpeed);
+	}
+	else if (!up && down) {
+		lift1.Set(downSpeed);
+		lift2.Set(downSpeed);
+	}
+	else if (!up && !down) {
+		lift1.Set(0.0);
+		lift2.Set(0.0);
+	}
+
 }
 
 Robot::Step::Step(Robot *r, StepType steptype, std::vector<double> parameters) : robot(r) {
