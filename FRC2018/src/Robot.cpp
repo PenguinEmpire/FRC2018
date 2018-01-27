@@ -20,6 +20,8 @@ const int pwm2 = 2;
 const int pwm3 = 3;
 const int pwm4 = 4;
 const int pwm5 = 5;
+const int pwm6 = 6;
+const int pwm7 = 7;
 
 const int usb0 = 0;
 const int usb1 = 1;
@@ -36,6 +38,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	r2(pwm3),
 	leftIO(pwm4),
 	rightIO(pwm5),
+	lift1(pwm6),
+	lift2(pwm7),
 	compressor(pcm0),
 	leftGearbox(pcm0, pch0, pch1),
 	rightGearbox(pcm0, pch2, pch3)
@@ -62,6 +66,9 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	l2.SetExpiration(0.1);
 	r1.SetExpiration(0.1);
 	r2.SetExpiration(0.1);
+	lift1.SetExpiration(0.1);
+	lift2.SetExpiration(0.1);
+
 
 	timer = new Timer();
 	testStep = 0;
@@ -79,6 +86,8 @@ void Robot::RobotInit() { // Runs only when robot code starts initially
 	r2.SetInverted(true);
 	leftIO.SetInverted(true);
 	rightIO.SetInverted(false);
+	lift1.SetInverted(false);
+	lift2.SetInverted(false);
 
 
 	compressorEnabled = compressor.Enabled();
@@ -185,6 +194,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	GyroTurn(m_left.ReadButton(12), 0.7, -90);
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
 	ManualCubeIO(m_left.ReadButton(1), m_right.ReadButton(1));
+	RunLifter(m_right.ReadButton(5), m_right.ReadButton(3));
 
 	//Send dashboard values
 	SmartDashboard::PutNumber("Gyro Turning Yaw", latestYaw);
@@ -415,6 +425,24 @@ void Robot::RunCubeIO(Direction dir) {
 		SmartDashboard::PutString("IO Direction", "In");
 		leftIO.Set(-0.65);
 		rightIO.Set(-0.65);
+	}
+}
+
+void Robot::RunLifter(bool up, bool down) {
+	float upSpeed = .65;
+	float downSpeed = -.3;
+
+	if (up && !down) {
+		lift1.Set(upSpeed);
+		lift2.Set(upSpeed);
+	}
+	else if (!up && down) {
+		lift1.Set(downSpeed);
+		lift2.Set(downSpeed);
+	}
+	else if (!up && !down) {
+		lift1.Set(0.0);
+		lift2.Set(0.0);
 	}
 }
 
