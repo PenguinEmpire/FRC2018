@@ -419,10 +419,10 @@ void Robot::ShiftGears(Direction dir) {
 	 */
 	DoubleSolenoid::Value state;
 	if (dir == up) {
-		state = DoubleSolenoid::kReverse;
+		state = DoubleSolenoid::kForward;
 	}
 	else {
-		state = DoubleSolenoid::kForward;
+		state = DoubleSolenoid::kReverse;
 	}
 
 	leftGearbox.Set(state);
