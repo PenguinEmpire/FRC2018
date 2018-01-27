@@ -375,8 +375,8 @@ void Robot::ManualShiftLift(bool upBtn, bool downBtn) {
 }
 
 void Robot::ManualCubeIO(bool in, bool out) {
-	float inSpeed = -0.3;
-	float outSpeed = 0.5;
+	float inSpeed = -0.5;
+	float outSpeed = 0.75;
 
 	if (in && !out) {
 		leftIO.Set(inSpeed);
