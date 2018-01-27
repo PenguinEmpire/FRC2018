@@ -20,7 +20,6 @@ public:
 	MyJoystick m_left, m_right, m_handheld; // Button reading for Joysticks
 	Spark l1, l2, r1, r2; // Drive motor controllers
 	Spark leftIO, rightIO; // IO motor controllers
-	Spark lift1, lift2; // lift motor contollers
 	AHRS *ahrs; // Purple sensor board
 	Compressor compressor;
 	DoubleSolenoid leftGearbox, rightGearbox;
@@ -109,7 +108,6 @@ public:
 	//Other - functions that run in multiple states
 	void ShiftGears(Direction dir);
 	void RunCubeIO(Direction dir);
-	void RunLifter(bool up, bool down);
 
 };
 
