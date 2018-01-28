@@ -393,7 +393,7 @@ void Robot::ManualCubeIO(bool in, bool out) {
 }
 
 void Robot::TestInit() { // Runs at start of test phase, only once
-//	timer->Start();
+
 }
 
 void Robot::TestPeriodic() { // Looped through iteratively during test phase - do not put loops here!
@@ -463,7 +463,7 @@ void Robot::RunCubeIO(Direction dir) {
 
 void Robot::RunLifter(bool up, bool down) {
 	float upSpeed = 0.65;
-	float downSpeed  = -0.3;
+	float downSpeed  = -0.65;
 
 	if (up && !down) {
 		lift1.Set(upSpeed);
@@ -482,6 +482,7 @@ void Robot::RunLifter(bool up, bool down) {
 Robot::Step::Step(Robot *r, StepType steptype, std::vector<double> parameters) : robot(r) {
 	params = parameters;
 	type = steptype;
+
 	complete = false;
 	setup = true;
 }
