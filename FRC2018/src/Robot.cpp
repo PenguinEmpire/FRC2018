@@ -214,7 +214,8 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
  * TankDrive
  * GyroTurn
  * ManualShiftGears
- * RunCubeIO
+ * ManualShiftLift
+ * ManualCubeIO
  */
 void Robot::SetLeftSpeed(float speed) {
 	l1.Set(speed);
@@ -510,15 +511,15 @@ void Robot::Step::Run() {
 			setup = false;
 		}
 		else {
-//			double speed, distance;
-//			if (params.size() == 2) {
-//				speed = params[0];
-//				distance = params[1];
-//			}
-//			else {
-//				speed = 0;
-//				distance = 0;
-//			}
+			double speed, distance;
+			if (params.size() == 2) {
+				speed = params[0];
+				distance = params[1];
+			}
+			else {
+				speed = 0;
+				distance = 0;
+			}
 		}
 
 		/*
