@@ -98,17 +98,17 @@ void Robot::RobotInit() { // Runs only when robot code starts initially
 }
 
 void Robot::AutonomousInit() { // Runs at start of autonomous phase, only once
-//	CheckSide();
-//	CheckPos();
-//	if (fpos == leftPos) {
-//		LeftAuto();
-//	}
-//	else if (fpos == centerPos) {
-//		CenterAuto();
-//	}
-//	else if (fpos == rightPos) {
-//		RightAuto();
-//	}
+	CheckSide();
+	CheckPos();
+	if (fpos == leftPos) {
+		LeftAuto();
+	}
+	else if (fpos == centerPos) {
+		CenterAuto();
+	}
+	else if (fpos == rightPos) {
+		RightAuto();
+	}
 }
 
 void Robot::AutonomousPeriodic() { // Looped through iteratively during autonomous phase - do not put loops here!
