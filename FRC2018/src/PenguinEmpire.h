@@ -23,7 +23,8 @@ public:
 	Spark lift1, lift2; // Lifter motor controllers
 	AHRS *ahrs; // Purple sensor board
 	Compressor compressor;
-	DoubleSolenoid leftGearbox, rightGearbox, liftGearbox;
+	DoubleSolenoid leftGearbox, rightGearbox, liftGearbox; // Gearbox shifters
+	DoubleSolenoid omniDropper;
 	Timer* timer;
 
 // Values and Structures
@@ -102,6 +103,7 @@ public:
 	void ManualShiftGears(bool upBtn, bool downBtn);
 	void ManualShiftLift(bool upBtn, bool downBtn);
 	void ManualCubeIO(bool inBtn, bool outBtn);
+	void DropOmnis(bool dropBtn, bool raiseBtn);
 
 	// Test
 	void TestInit();

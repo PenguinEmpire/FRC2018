@@ -13,6 +13,8 @@ const int pch2 = 2;
 const int pch3 = 3;
 const int pch4 = 4;
 const int pch5 = 5;
+const int pch6 = 6;
+const int pch7 = 7;
 
 const int pcm0 = 0;
 
@@ -45,7 +47,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	compressor(pcm0),
 	leftGearbox(pcm0, pch0, pch1),
 	rightGearbox(pcm0, pch2, pch3),
-	liftGearbox(pcm0, pch4, pch5)
+	liftGearbox(pcm0, pch4, pch5),
+	omniDropper(pcm0, pch6, pch7)
 {
 	leftSwitch = false;
 	leftScale = false;
@@ -132,13 +135,15 @@ void Robot::CheckSide() {
 	gamedata = frc::DriverStation::GetInstance().GetGameSpecificMessage();
 	if (gamedata[0] == 'L') {
 		leftSwitch = true;
-	} else {
+	}
+	else {
 		leftSwitch = false;
 	}
 
 	if (gamedata[1] == 'L') {
 		leftScale = true;
-	} else {
+	}
+	else {
 		leftScale = false;
 	}
 }
@@ -197,6 +202,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	ManualShiftLift(m_left.ReadButton(6), m_left.ReadButton(4));
 	ManualCubeIO(m_left.ReadButton(1), m_right.ReadButton(1));
 	RunLifter(m_right.ReadButton(5), m_right.ReadButton(3));
+	DropOmnis(m_left.ReadButton(5), m_left.ReadButton(3));
 
 
 	//Send dashboard values
@@ -217,6 +223,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
  * ManualShiftLift
  * ManualCubeIO
  */
+
 void Robot::SetLeftSpeed(float speed) {
 	l1.Set(speed);
 	l2.Set(speed);
@@ -390,6 +397,16 @@ void Robot::ManualCubeIO(bool in, bool out) {
 	else if (!in && !out) {
 		leftIO.Set(0.0);
 		rightIO.Set(0.0);
+	}
+}
+
+void Robot::DropOmnis(bool dropBtn, bool raiseBtn) {
+	if (dropBtn && !raiseBtn) {
+		omniDropper.Set(DoubleSolenoid::kReverse);
+	}
+
+	if (!dropBtn && raiseBtn) {
+		omniDropper.Set(DoubleSolenoid::kForward);
 	}
 }
 
