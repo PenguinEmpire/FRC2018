@@ -225,12 +225,12 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
  * ManualCubeIO
  */
 
-void Robot::SetLeftSpeed(float speed) {
+void Robot::SetLeftSpeed(double speed) {
 	l1.Set(speed);
 	l2.Set(speed);
 }
 
-void Robot::SetRightSpeed(float speed) {
+void Robot::SetRightSpeed(double speed) {
 	r1.Set(speed);
 	r2.Set(speed);
 }
@@ -545,8 +545,8 @@ void Robot::Step::Run() {
 //				distance = params[1];
 //			}
 //			else {
-//				speed = 0;
-//				distance = 0;
+//				speed = 0.0;
+//				distance = 0.0;
 //			}
 		}
 
@@ -562,15 +562,29 @@ void Robot::Step::Run() {
 			setup = false;
 		}
 		else {
-//			double speed, angle;
-//			if (params.size() == 2) {
-//				speed = params[0];
-//				angle = params[1];
-//			}
-//			else {
-//				speed = 0;
-//				angle = 0;
-//			}
+			double speed, angle;
+			if (params.size() == 2) {
+				speed = params[0];
+				angle = params[1];
+			}
+			else {
+				speed = 0.0;
+				angle = 0.0;
+			}
+
+			if (angle < 0 && robot->ahrs->GetYaw() > angle) {
+				robot->SetLeftSpeed(-speed);
+				robot->SetRightSpeed(speed);
+			}
+			else if (angle > 0 && robot->ahrs->GetYaw() < angle) {
+				robot->SetLeftSpeed(speed);
+				robot->SetRightSpeed(-speed);
+			}
+			else {
+				robot->SetLeftSpeed(0.0);
+				robot->SetRightSpeed(0.0);
+				complete = true;
+			}
 		}
 
 		/*
@@ -582,20 +596,32 @@ void Robot::Step::Run() {
 			/*
 			 * Stop stuff
 			 */
+			robot->timer->Reset();
 			setup = false;
 		}
 		else {
-//			double leftSpeed, rightSpeed, duration;
-//			if (params.size() == 3) {
-//				leftSpeed = params[0];
-//				rightSpeed = params[1];
-//				duration = params[2];
-//			}
-//			else {
-//				leftSpeed = 0.0;
-//				rightSpeed = 0.0;
-//				duration = 0.0;
-//			}
+			double leftSpeed, rightSpeed, duration;
+			if (params.size() == 3) {
+				leftSpeed = params[0];
+				rightSpeed = params[1];
+				duration = params[2];
+			}
+			else {
+				leftSpeed = 0.0;
+				rightSpeed = 0.0;
+				duration = 0.0;
+			}
+
+			if (robot->timer->Get() < duration) {
+				robot->leftIO.Set(leftSpeed);
+				robot->rightIO.Set(rightSpeed);
+			}
+			else {
+				robot->leftIO.Set(0.0);
+				robot->rightIO.Set(0.0);
+				complete = true;
+			}
+
 		}
 
 		/*
@@ -610,8 +636,7 @@ void Robot::Step::Run() {
 			setup = false;
 		}
 		else {
-//			double speed, height;
-//			Direction direction;
+//			double speed, height, direction;
 //			if (params.size() == 3) {
 //				speed = params[0];
 //				height = params[1];
@@ -620,7 +645,7 @@ void Robot::Step::Run() {
 //			else {
 //				speed = 0.0;
 //				height = 0.0;
-//				direction = up;
+//				direction = 0;
 //			}
 		}
 
@@ -647,6 +672,9 @@ void Robot::Step::Run() {
 //				targetY = 0.0;
 //				targetArea = 0.0;
 //			}
+//
+//			double moveSpeed = 0.5;
+//			double turnSpeed = 0.5;
 		}
 
 		/*

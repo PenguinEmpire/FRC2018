@@ -96,8 +96,8 @@ public:
 	// Teleoperated
 	void TeleopInit();
 	void TeleopPeriodic();
-	void SetLeftSpeed(float speed);
-	void SetRightSpeed(float speed);
+	void SetLeftSpeed(double speed);
+	void SetRightSpeed(double speed);
 	void StopMotors();
 	void TankDrive();
 	void GyroTurn(bool btn, float speed, float angle); // Deprecated
