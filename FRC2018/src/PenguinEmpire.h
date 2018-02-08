@@ -104,6 +104,7 @@ public:
 	void ManualShiftLift(bool upBtn, bool downBtn);
 	void ManualCubeIO(bool inBtn, bool outBtn);
 	void DropOmnis(bool dropBtn, bool raiseBtn);
+	void HoldOmnis(bool btn);
 
 	// Test
 	void TestInit();

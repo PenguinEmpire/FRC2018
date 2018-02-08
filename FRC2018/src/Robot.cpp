@@ -202,7 +202,8 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	ManualShiftLift(m_left.ReadButton(6), m_left.ReadButton(4));
 	ManualCubeIO(m_left.ReadButton(1), m_right.ReadButton(1));
 	RunLifter(m_right.ReadButton(5), m_right.ReadButton(3));
-	DropOmnis(m_left.ReadButton(5), m_left.ReadButton(3));
+//	DropOmnis(m_left.ReadButton(5), m_left.ReadButton(3));
+	HoldOmnis(m_right.ReadButton(2));
 
 
 	//Send dashboard values
@@ -383,12 +384,13 @@ void Robot::ManualShiftLift(bool upBtn, bool downBtn) {
 }
 
 void Robot::ManualCubeIO(bool in, bool out) {
-	float inSpeed = -0.5;
+	float inSpeedL = -0.65;
+	float inSpeedR = -0.65;
 	float outSpeed = 0.75;
 
 	if (in && !out) {
-		leftIO.Set(inSpeed);
-		rightIO.Set(inSpeed);
+		leftIO.Set(inSpeedL);
+		rightIO.Set(inSpeedR);
 	}
 	else if (!in && out) {
 		leftIO.Set(outSpeed);
@@ -406,6 +408,15 @@ void Robot::DropOmnis(bool dropBtn, bool raiseBtn) {
 	}
 
 	if (!dropBtn && raiseBtn) {
+		omniDropper.Set(DoubleSolenoid::kForward);
+	}
+}
+
+void Robot::HoldOmnis(bool btn) {
+	if (btn) {
+		omniDropper.Set(DoubleSolenoid::kReverse);
+	}
+	else {
 		omniDropper.Set(DoubleSolenoid::kForward);
 	}
 }
