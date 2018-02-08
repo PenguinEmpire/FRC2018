@@ -49,7 +49,10 @@ public:
 	enum StepType { // Used for autonomous
 		reset,
 		encoderMove,
-		gyroTurn
+		gyroTurn,
+		cubeIO,
+		lifter,
+		trackCube
 	};
 
 	enum Direction {

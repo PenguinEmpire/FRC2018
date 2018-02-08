@@ -539,15 +539,15 @@ void Robot::Step::Run() {
 			setup = false;
 		}
 		else {
-			double speed, distance;
-			if (params.size() == 2) {
-				speed = params[0];
-				distance = params[1];
-			}
-			else {
-				speed = 0;
-				distance = 0;
-			}
+//			double speed, distance;
+//			if (params.size() == 2) {
+//				speed = params[0];
+//				distance = params[1];
+//			}
+//			else {
+//				speed = 0;
+//				distance = 0;
+//			}
 		}
 
 		/*
@@ -575,6 +575,82 @@ void Robot::Step::Run() {
 
 		/*
 		 * Turn at speed until gyro reaches target value
+		 */
+		break;
+	case cubeIO:
+		if (setup) {
+			/*
+			 * Stop stuff
+			 */
+			setup = false;
+		}
+		else {
+//			double leftSpeed, rightSpeed, duration;
+//			if (params.size() == 3) {
+//				leftSpeed = params[0];
+//				rightSpeed = params[1];
+//				duration = params[2];
+//			}
+//			else {
+//				leftSpeed = 0.0;
+//				rightSpeed = 0.0;
+//				duration = 0.0;
+//			}
+		}
+
+		/*
+		 * Run IO at speed until the duration is over
+		 */
+		break;
+	case lifter:
+		if (setup) {
+			/*
+			 * Stop stuff
+			 */
+			setup = false;
+		}
+		else {
+//			double speed, height;
+//			Direction direction;
+//			if (params.size() == 3) {
+//				speed = params[0];
+//				height = params[1];
+//				direction = params[2];
+//			}
+//			else {
+//				speed = 0.0;
+//				height = 0.0;
+//				direction = up;
+//			}
+		}
+
+		/*
+		 * Run lifter at speed until it reaches target height
+		 */
+		break;
+	case trackCube:
+		if (setup) {
+			/*
+			 * Stop stuff
+			 */
+			setup = false;
+		}
+		else {
+//			double targetX, targetY, targetArea;
+//			if (params.size() == 3) {
+//				targetX = params[0];
+//				targetY = params[1];
+//				targetArea = params[2];
+//			}
+//			else {
+//				targetX = 0.0;
+//				targetY = 0.0;
+//				targetArea = 0.0;
+//			}
+		}
+
+		/*
+		 * Approach cube until it is in the proper range to be picked up
 		 */
 		break;
 	}
