@@ -13,6 +13,7 @@
 #include "MyJoystick.h"
 #include "AHRS.h"
 
+
 class Robot : public IterativeRobot {
 public:
 // Components and Systems
@@ -26,6 +27,7 @@ public:
 	DoubleSolenoid leftGearbox, rightGearbox, liftGearbox; // Gearbox shifters
 	DoubleSolenoid omniDropper;
 	Timer* timer;
+	DigitalInput* hallSensor;
 
 // Values and Structures
 	bool leftSwitch; // Is our color on the left side of the switch?
@@ -37,6 +39,8 @@ public:
 	float current;
 	int latestYaw;
 	bool turnSetup;
+
+	bool gl90, gr90, gl180, gr180;
 
 	int testStep;
 
@@ -100,9 +104,10 @@ public:
 	void SetRightSpeed(double speed);
 	void StopMotors();
 	void TankDrive();
-	void GyroTurn(bool btn, float speed, float angle); // Deprecated
-	void GyroTurn(int pov, float speed); // Deprecated
-	void GyroLeft(float speed, float angle);
+	void Gyro90L(bool btn);
+	void Gyro90R(bool btn);
+	void Gyro180L(bool btn);
+	void Gyro180R(bool btn);
 	void ManualShiftGears(bool upBtn, bool downBtn);
 	void ManualShiftLift(bool upBtn, bool downBtn);
 	void ManualCubeIO(bool inBtn, bool outBtn);
@@ -118,6 +123,7 @@ public:
 	void ShiftLift(Direction dir);
 	void RunCubeIO(Direction dir);
 	void RunLifter(bool up, bool down);
+	void CheckHallSensor();
 
 };
 

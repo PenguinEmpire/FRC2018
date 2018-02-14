@@ -7,6 +7,8 @@
 
 #include "PenguinEmpire.h"
 
+const int dio0 = 0;
+
 const int pch0 = 0;
 const int pch1 = 1;
 const int pch2 = 2;
@@ -60,11 +62,17 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	latestYaw = 0;
 	turnSetup = true;
 
+	gl90 = false;
+	gr90 = false;
+	gl180 = false;
+	gr180 = false;
+
 	ahrs = new AHRS(SerialPort::kMXP);
 
 	fpos = centerPos;
 
-	autosteps = {};
+	autosteps = {Step(this, gyroTurn, {1.0, -90}),
+				 Step(this, gyroTurn, {1.0,  90})};
 	curstep = 0;
 	numsteps = 0;
 
@@ -76,6 +84,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	lift2.SetExpiration(0.1);
 
 	timer = new Timer();
+	hallSensor = new DigitalInput(dio0);
 	testStep = 0;
 }
 
@@ -195,23 +204,22 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 		TankDrive();
 	}
 
-	GyroTurn(m_left.ReadButton(11), 0.7, 90);
-	GyroTurn(m_left.ReadButton(10), 0.7, 180);
-	GyroTurn(m_left.ReadButton(12), 0.7, -90);
+	Gyro90L(m_left.ReadButton(9));
+	Gyro90R(m_left.ReadButton(10));
+	Gyro180L(m_left.ReadButton(11));
+	Gyro180R(m_left.ReadButton(12));
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
 	ManualShiftLift(m_left.ReadButton(6), m_left.ReadButton(4));
 	ManualCubeIO(m_left.ReadButton(1), m_right.ReadButton(1));
 	RunLifter(m_right.ReadButton(5), m_right.ReadButton(3));
 //	DropOmnis(m_left.ReadButton(5), m_left.ReadButton(3));
 	HoldOmnis(m_right.ReadButton(2));
+	CheckHallSensor();
 
 
 	//Send dashboard values
 	SmartDashboard::PutNumber("Gyro Turning Yaw", latestYaw);
 	SmartDashboard::PutNumber("Current Yaw", ahrs->GetYaw());
-	SmartDashboard::PutBoolean("-90 Btn", m_left.ReadButton(11));
-	SmartDashboard::PutBoolean("180 Btn", m_left.ReadButton(10));
-	SmartDashboard::PutBoolean("90 Btn", m_left.ReadButton(12));
 }
 
 /*
@@ -274,91 +282,106 @@ void Robot::TankDrive() {
 	}
 }
 
-void Robot::GyroTurn(bool btn, float speed, float angle) { // Turn based on button value
-	if (btn || gyroTurning) {
-		latestYaw = ahrs->GetYaw();
-		SmartDashboard::PutNumber("Target Angle", angle);
+void Robot::Gyro90L(bool btn) {
+	if (btn) {
+		gl90 = true;
+	}
+
+	if (gl90) {
 		if (turnSetup) {
+			SmartDashboard::PutNumber("Latest Yaw Target", -90);
 			ahrs->ZeroYaw();
 			turnSetup = false;
 		}
-		if (angle < 0) {
-			if (ahrs->GetYaw() > angle) { // Turn counterclockwise
-				gyroTurning = true;
-				controlOverride = true;
-				SetLeftSpeed(-speed);
-				SetRightSpeed(speed);
-			}
-			else {
-				StopMotors();
-				gyroTurning = false;
-				controlOverride = false;
-				ahrs->ZeroYaw();
-				turnSetup = true;
-			}
-		}
 		else {
-			if (ahrs->GetYaw() < angle) { // Turn clockwise
-				gyroTurning = true;
-				controlOverride = true;
-				SetLeftSpeed(speed);
-				SetRightSpeed(-speed);
+			if (ahrs->GetYaw() > -80) {
+				SetLeftSpeed(-1.0);
+				SetRightSpeed(1.0);
 			}
 			else {
-				StopMotors();
-				gyroTurning = false;
-				controlOverride = false;
-				ahrs->ZeroYaw();
+				SetLeftSpeed(0.0);
+				SetRightSpeed(0.0);
 				turnSetup = true;
+				gl90 = false;
 			}
 		}
 	}
 }
 
-void Robot::GyroTurn(int pov, float speed) { // Turn based on POV
-	/*
-	 * Get the direction of the POV, then turn at speed to the angle relative to the robot
-	 */
-	if (pov == 0 || gyroTurning) { // Turn 90 degrees clockwise
-		if (ahrs->GetYaw() > -90) {
-			gyroTurning = true; // Allows us to continue turning to the angle if pov is released
-			controlOverride = true; // Prevents tank drive control during turn
-			SetLeftSpeed(-speed);
-			SetRightSpeed(speed);
+void Robot::Gyro90R(bool btn) {
+	if (btn) {
+		gr90 = true;
+	}
+
+	if (gr90) {
+		if (turnSetup) {
+			SmartDashboard::PutNumber("Latest Yaw Target", 90);
+			ahrs->ZeroYaw();
+			turnSetup = false;
 		}
 		else {
-			StopMotors();
-			gyroTurning = false; // Stop turning if POV released
-			controlOverride = false; // Return manual control of drive
-			ahrs->ZeroYaw(); // Reset yaw to zero
+			if (ahrs->GetYaw() < 80) {
+				SetLeftSpeed(1.0);
+				SetRightSpeed(-1.0);
+			}
+			else {
+				SetLeftSpeed(0.0);
+				SetRightSpeed(0.0);
+				turnSetup = true;
+				gr90 = false;
+			}
 		}
 	}
-	else if (pov == 180 || gyroTurning) { // Turn 180 degrees clockwise
-		if (ahrs->GetYaw() < 180) {
-			gyroTurning = true;
-			controlOverride = true;
-			SetLeftSpeed(-speed);
-			SetRightSpeed(speed);
+}
+
+void Robot::Gyro180L(bool btn) {
+	if (btn) {
+		gl180 = true;
+	}
+
+	if (gl180) {
+		if (turnSetup) {
+			SmartDashboard::PutNumber("Latest Yaw Target", -180);
+			ahrs->ZeroYaw();
+			turnSetup = false;
 		}
 		else {
-			StopMotors();
-			gyroTurning = false;
-			controlOverride = false;
-			ahrs->ZeroYaw(); // Reset yaw to zero
+			if (ahrs->GetYaw() > -179) {
+				SetLeftSpeed(-1.0);
+				SetRightSpeed(1.0);
+			}
+			else if (ahrs->GetYaw() <= -160 || ahrs->GetYaw() > 130) {
+				SetLeftSpeed(0.0);
+				SetRightSpeed(0.0);
+				turnSetup = true;
+				gl180 = false;
+			}
 		}
 	}
-	else if (pov == 270 || gyroTurning) { // Turn 90 degrees counterclockwise
-		if (ahrs->GetYaw() < 90) {
-			gyroTurning = true;
-			controlOverride = true;
-			SetLeftSpeed(-speed);
-			SetRightSpeed(speed);
+}
+
+void Robot::Gyro180R(bool btn) {
+	if (btn) {
+		gr180 = true;
+	}
+
+	if (gr180) {
+		if (turnSetup) {
+			SmartDashboard::PutNumber("Latest Yaw Target", 180);
+			ahrs->ZeroYaw();
+			turnSetup = false;
 		}
 		else {
-			StopMotors();
-			gyroTurning = false;
-			controlOverride = false;
-			ahrs->ZeroYaw(); // Reset yaw to zero
+			if (ahrs->GetYaw() < 179) {
+				SetLeftSpeed(1.0);
+				SetRightSpeed(-1.0);
+			}
+			else if (ahrs->GetYaw() >= 160 || ahrs->GetYaw() < -130) {
+				SetLeftSpeed(0.0);
+				SetRightSpeed(0.0);
+				turnSetup = true;
+				gr180 = false;
+			}
 		}
 	}
 }
@@ -508,6 +531,10 @@ void Robot::RunLifter(bool up, bool down) {
 	}
 }
 
+void Robot::CheckHallSensor() {
+	SmartDashboard::PutBoolean("Sensor Detecting?", hallSensor->Get());
+}
+
 Robot::Step::Step(Robot *r, StepType steptype, std::vector<double> parameters) : robot(r) {
 	params = parameters;
 	type = steptype;
@@ -556,9 +583,7 @@ void Robot::Step::Run() {
 		break;
 	case gyroTurn:
 		if (setup) {
-			/*
-			 * Stop stuff
-			 */
+			ahrs->ZeroYaw();
 			setup = false;
 		}
 		else {
@@ -683,6 +708,5 @@ void Robot::Step::Run() {
 		break;
 	}
 }
-
 
 START_ROBOT_CLASS(Robot)
