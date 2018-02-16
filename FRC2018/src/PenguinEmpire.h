@@ -68,18 +68,19 @@ public:
 		backward
 	};
 
-	struct Step {
-		Robot *robot;
-		StepType type;
-		bool complete, setup;
-		std::vector<double> params;
-		Step(Robot *r, StepType steptype, std::vector<double> parameters);
-		~Step();
-		void Run();
-	};
+//	struct Step {
+////		Robot *robot;
+//		StepType type;
+//		bool complete, setup;
+//		std::vector<double> params;
+//		Step(Robot *r, StepType steptype, std::vector<double> parameters);
+//		~Step();
+//		void Run();
+//	};
 
-	std::vector<Step> autosteps;
+	std::vector<std::vector<double>> autosteps;
 	int numsteps, curstep;
+	bool stepSetup, stepComplete;
 
 // Stages
 
@@ -96,6 +97,7 @@ public:
 	void LeftAuto();
 	void CenterAuto();
 	void RightAuto();
+	void RunSteps();
 
 	// Teleoperated
 	void TeleopInit();
@@ -106,8 +108,8 @@ public:
 	void TankDrive();
 	void Gyro90L(bool btn);
 	void Gyro90R(bool btn);
-	void Gyro180L(bool btn);
-	void Gyro180R(bool btn);
+//	void Gyro180L(bool btn);
+//	void Gyro180R(bool btn);
 	void ManualShiftGears(bool upBtn, bool downBtn);
 	void ManualShiftLift(bool upBtn, bool downBtn);
 	void ManualCubeIO(bool inBtn, bool outBtn);

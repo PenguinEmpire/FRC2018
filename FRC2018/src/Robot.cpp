@@ -71,10 +71,12 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 
 	fpos = centerPos;
 
-	autosteps = {Step(this, gyroTurn, {1.0, -90}),
-				 Step(this, gyroTurn, {1.0,  90})};
+	autosteps = {{0, -90, 0.65}, {0, 90, 0.65}};//,
+//				 /*Step(this, gyroTurn, {1.0,  90})*/};
 	curstep = 0;
 	numsteps = 0;
+	stepSetup = true;
+	stepComplete = false;
 
 	l1.SetExpiration(0.1);
 	l2.SetExpiration(0.1);
@@ -86,6 +88,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	timer = new Timer();
 	hallSensor = new DigitalInput(dio0);
 	testStep = 0;
+
+
 }
 
 Robot::~Robot() { // Robot destructor - Delete pointer values here
@@ -110,21 +114,25 @@ void Robot::RobotInit() { // Runs only when robot code starts initially
 }
 
 void Robot::AutonomousInit() { // Runs at start of autonomous phase, only once
-	CheckSide();
-	CheckPos();
-	if (fpos == leftPos) {
-		LeftAuto();
-	}
-	else if (fpos == centerPos) {
-		CenterAuto();
-	}
-	else if (fpos == rightPos) {
-		RightAuto();
-	}
+//	CheckSide();
+//	CheckPos();
+//	if (fpos == leftPos) {
+//		LeftAuto();
+//	}
+//	else if (fpos == centerPos) {
+//		CenterAuto();
+//	}
+//	else if (fpos == rightPos) {
+//		RightAuto();
+//	}
+
+	numsteps = autosteps.size();
 }
 
 void Robot::AutonomousPeriodic() { // Looped through iteratively during autonomous phase - do not put loops here!
-	RunCubeIO(backward);
+//	RunCubeIO(backward);
+
+	RunSteps();
 }
 
 /*
@@ -187,6 +195,42 @@ void Robot::RightAuto() {
 	 */
 }
 
+void Robot::RunSteps() {
+	if (curstep < numsteps) {
+		std::vector<double> step = autosteps[curstep];
+		if (!stepComplete) {
+			if (step[0] == 0) { //Gyro Turn
+				if (stepSetup) {
+					ahrs->ZeroYaw();
+					SetLeftSpeed(0.0);
+					SetRightSpeed(0.0);
+					stepSetup = false;
+				}
+				else {
+					if (step[1] < 0 && ahrs->GetYaw() > step[1]) {
+						SetLeftSpeed(-step[2]);
+						SetRightSpeed(step[2]);
+					}
+					else if (step[1] > 0 && ahrs->GetYaw() < step[1]) {
+						SetLeftSpeed(step[2]);
+						SetRightSpeed(-step[2]);
+					}
+					else {
+						SetLeftSpeed(0.0);
+						SetRightSpeed(0.0);
+						stepComplete = true;
+					}
+				}
+			}
+		}
+		else {
+			curstep++;
+			stepSetup = true;
+			stepComplete = false;
+		}
+	}
+}
+
 void Robot::TeleopInit() { // Runs at start of teleoperated phase, only once
 	// Point MyJoysticks to Joysticks
 	m_left.Init(&leftStick);
@@ -206,8 +250,8 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 
 	Gyro90L(m_left.ReadButton(9));
 	Gyro90R(m_left.ReadButton(10));
-	Gyro180L(m_left.ReadButton(11));
-	Gyro180R(m_left.ReadButton(12));
+//	Gyro180L(m_left.ReadButton(11));
+//	Gyro180R(m_left.ReadButton(12));
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
 	ManualShiftLift(m_left.ReadButton(6), m_left.ReadButton(4));
 	ManualCubeIO(m_left.ReadButton(1), m_right.ReadButton(1));
@@ -334,57 +378,57 @@ void Robot::Gyro90R(bool btn) {
 	}
 }
 
-void Robot::Gyro180L(bool btn) {
-	if (btn) {
-		gl180 = true;
-	}
-
-	if (gl180) {
-		if (turnSetup) {
-			SmartDashboard::PutNumber("Latest Yaw Target", -180);
-			ahrs->ZeroYaw();
-			turnSetup = false;
-		}
-		else {
-			if (ahrs->GetYaw() > -179) {
-				SetLeftSpeed(-1.0);
-				SetRightSpeed(1.0);
-			}
-			else if (ahrs->GetYaw() <= -160 || ahrs->GetYaw() > 130) {
-				SetLeftSpeed(0.0);
-				SetRightSpeed(0.0);
-				turnSetup = true;
-				gl180 = false;
-			}
-		}
-	}
-}
-
-void Robot::Gyro180R(bool btn) {
-	if (btn) {
-		gr180 = true;
-	}
-
-	if (gr180) {
-		if (turnSetup) {
-			SmartDashboard::PutNumber("Latest Yaw Target", 180);
-			ahrs->ZeroYaw();
-			turnSetup = false;
-		}
-		else {
-			if (ahrs->GetYaw() < 179) {
-				SetLeftSpeed(1.0);
-				SetRightSpeed(-1.0);
-			}
-			else if (ahrs->GetYaw() >= 160 || ahrs->GetYaw() < -130) {
-				SetLeftSpeed(0.0);
-				SetRightSpeed(0.0);
-				turnSetup = true;
-				gr180 = false;
-			}
-		}
-	}
-}
+//void Robot::Gyro180L(bool btn) {
+//	if (btn) {
+//		gl180 = true;
+//	}
+//
+//	if (gl180) {
+//		if (turnSetup) {
+//			SmartDashboard::PutNumber("Latest Yaw Target", -180);
+//			ahrs->ZeroYaw();
+//			turnSetup = false;
+//		}
+//		else {
+//			if (ahrs->GetYaw() > -179) {
+//				SetLeftSpeed(-1.0);
+//				SetRightSpeed(1.0);
+//			}
+//			else if (ahrs->GetYaw() <= -160 || ahrs->GetYaw() > 130) {
+//				SetLeftSpeed(0.0);
+//				SetRightSpeed(0.0);
+//				turnSetup = true;
+//				gl180 = false;
+//			}
+//		}
+//	}
+//}
+//
+//void Robot::Gyro180R(bool btn) {
+//	if (btn) {
+//		gr180 = true;
+//	}
+//
+//	if (gr180) {
+//		if (turnSetup) {
+//			SmartDashboard::PutNumber("Latest Yaw Target", 180);
+//			ahrs->ZeroYaw();
+//			turnSetup = false;
+//		}
+//		else {
+//			if (ahrs->GetYaw() < 179) {
+//				SetLeftSpeed(1.0);
+//				SetRightSpeed(-1.0);
+//			}
+//			else if (ahrs->GetYaw() >= 160 || ahrs->GetYaw() < -130) {
+//				SetLeftSpeed(0.0);
+//				SetRightSpeed(0.0);
+//				turnSetup = true;
+//				gr180 = false;
+//			}
+//		}
+//	}
+//}
 
 void Robot::ManualShiftGears(bool upBtn, bool downBtn) {
 	if (upBtn) {
@@ -535,178 +579,178 @@ void Robot::CheckHallSensor() {
 	SmartDashboard::PutBoolean("Sensor Detecting?", hallSensor->Get());
 }
 
-Robot::Step::Step(Robot *r, StepType steptype, std::vector<double> parameters) : robot(r) {
-	params = parameters;
-	type = steptype;
-
-	complete = false;
-	setup = true;
-}
-
-Robot::Step::~Step() {
-	delete robot;
-}
-
-
-void Robot::Step::Run() {
-	/*
-	 * Checks what the step is, then reads in the arguments and executes it
-	 */
-	switch (type) {
-	case reset:
-		/*
-		 * Stop stuff
-		 */
-		break;
-	case encoderMove:
-		if (setup) {
-			/*
-			 * Stop stuff and initialize
-			 */
-			setup = false;
-		}
-		else {
-//			double speed, distance;
+//Robot::Step::Step(Robot* r , StepType steptype, std::vector<double> parameters) : robot(r) {
+//	params = parameters;
+//	type = steptype;
+//
+//	complete = false;
+//	setup = true;
+//}
+//
+//Robot::Step::~Step() {
+//	delete robot;
+//}
+//
+//
+//void Robot::Step::Run() {
+//	/*
+//	 * Checks what the step is, then reads in the arguments and executes it
+//	 */
+//	switch (type) {
+//	case reset:
+//		/*
+//		 * Stop stuff
+//		 */
+//		break;
+//	case encoderMove:
+//		if (setup) {
+//			/*
+//			 * Stop stuff and initialize
+//			 */
+//			setup = false;
+//		}
+//		else {
+////			double speed, distance;
+////			if (params.size() == 2) {
+////				speed = params[0];
+////				distance = params[1];
+////			}
+////			else {
+////				speed = 0.0;
+////				distance = 0.0;
+////			}
+//		}
+//
+//		/*
+//		 * Move at speed until encoders reach target value
+//		 */
+//		break;
+//	case gyroTurn:
+//		if (setup) {
+////			robot->ahrs->ZeroYaw();
+//			setup = false;
+//		}
+//		else {
+//			double speed, angle;
 //			if (params.size() == 2) {
 //				speed = params[0];
-//				distance = params[1];
+//				angle = params[1];
 //			}
 //			else {
 //				speed = 0.0;
-//				distance = 0.0;
-//			}
-		}
-
-		/*
-		 * Move at speed until encoders reach target value
-		 */
-		break;
-	case gyroTurn:
-		if (setup) {
-			ahrs->ZeroYaw();
-			setup = false;
-		}
-		else {
-			double speed, angle;
-			if (params.size() == 2) {
-				speed = params[0];
-				angle = params[1];
-			}
-			else {
-				speed = 0.0;
-				angle = 0.0;
-			}
-
-			if (angle < 0 && robot->ahrs->GetYaw() > angle) {
-				robot->SetLeftSpeed(-speed);
-				robot->SetRightSpeed(speed);
-			}
-			else if (angle > 0 && robot->ahrs->GetYaw() < angle) {
-				robot->SetLeftSpeed(speed);
-				robot->SetRightSpeed(-speed);
-			}
-			else {
-				robot->SetLeftSpeed(0.0);
-				robot->SetRightSpeed(0.0);
-				complete = true;
-			}
-		}
-
-		/*
-		 * Turn at speed until gyro reaches target value
-		 */
-		break;
-	case cubeIO:
-		if (setup) {
-			/*
-			 * Stop stuff
-			 */
-			robot->timer->Reset();
-			setup = false;
-		}
-		else {
-			double leftSpeed, rightSpeed, duration;
-			if (params.size() == 3) {
-				leftSpeed = params[0];
-				rightSpeed = params[1];
-				duration = params[2];
-			}
-			else {
-				leftSpeed = 0.0;
-				rightSpeed = 0.0;
-				duration = 0.0;
-			}
-
-			if (robot->timer->Get() < duration) {
-				robot->leftIO.Set(leftSpeed);
-				robot->rightIO.Set(rightSpeed);
-			}
-			else {
-				robot->leftIO.Set(0.0);
-				robot->rightIO.Set(0.0);
-				complete = true;
-			}
-
-		}
-
-		/*
-		 * Run IO at speed until the duration is over
-		 */
-		break;
-	case lifter:
-		if (setup) {
-			/*
-			 * Stop stuff
-			 */
-			setup = false;
-		}
-		else {
-//			double speed, height, direction;
-//			if (params.size() == 3) {
-//				speed = params[0];
-//				height = params[1];
-//				direction = params[2];
-//			}
-//			else {
-//				speed = 0.0;
-//				height = 0.0;
-//				direction = 0;
-//			}
-		}
-
-		/*
-		 * Run lifter at speed until it reaches target height
-		 */
-		break;
-	case trackCube:
-		if (setup) {
-			/*
-			 * Stop stuff
-			 */
-			setup = false;
-		}
-		else {
-//			double targetX, targetY, targetArea;
-//			if (params.size() == 3) {
-//				targetX = params[0];
-//				targetY = params[1];
-//				targetArea = params[2];
-//			}
-//			else {
-//				targetX = 0.0;
-//				targetY = 0.0;
-//				targetArea = 0.0;
+//				angle = 0.0;
 //			}
 //
-//			double moveSpeed = 0.5;
-//			double turnSpeed = 0.5;
-		}
-
-		/*
-		 * Approach cube until it is in the proper range to be picked up
-		 */
-		break;
-	}
-}
+////			if (angle < 0 && robot->ahrs->GetYaw() > angle) {
+////				robot->SetLeftSpeed(-speed);
+////				robot->SetRightSpeed(speed);
+////			}
+////			else if (angle > 0 && robot->ahrs->GetYaw() < angle) {
+////				robot->SetLeftSpeed(speed);
+////				robot->SetRightSpeed(-speed);
+////			}
+////			else {
+////				robot->SetLeftSpeed(0.0);
+////				robot->SetRightSpeed(0.0);
+////				complete = true;
+////			}
+//		}
+//
+//		/*
+//		 * Turn at speed until gyro reaches target value
+//		 */
+//		break;
+//	case cubeIO:
+//		if (setup) {
+//			/*
+//			 * Stop stuff
+//			 */
+//			robot->timer->Reset();
+//			setup = false;
+//		}
+//		else {
+//			double leftSpeed, rightSpeed, duration;
+//			if (params.size() == 3) {
+//				leftSpeed = params[0];
+//				rightSpeed = params[1];
+//				duration = params[2];
+//			}
+//			else {
+//				leftSpeed = 0.0;
+//				rightSpeed = 0.0;
+//				duration = 0.0;
+//			}
+//
+//			if (robot->timer->Get() < duration) {
+//				robot->leftIO.Set(leftSpeed);
+//				robot->rightIO.Set(rightSpeed);
+//			}
+//			else {
+//				robot->leftIO.Set(0.0);
+//				robot->rightIO.Set(0.0);
+//				complete = true;
+//			}
+//
+//		}
+//
+//		/*
+//		 * Run IO at speed until the duration is over
+//		 */
+//		break;
+//	case lifter:
+//		if (setup) {
+//			/*
+//			 * Stop stuff
+//			 */
+//			setup = false;
+//		}
+//		else {
+////			double speed, height, direction;
+////			if (params.size() == 3) {
+////				speed = params[0];
+////				height = params[1];
+////				direction = params[2];
+////			}
+////			else {
+////				speed = 0.0;
+////				height = 0.0;
+////				direction = 0;
+////			}
+//		}
+//
+//		/*
+//		 * Run lifter at speed until it reaches target height
+//		 */
+//		break;
+//	case trackCube:
+//		if (setup) {
+//			/*
+//			 * Stop stuff
+//			 */
+//			setup = false;
+//		}
+//		else {
+////			double targetX, targetY, targetArea;
+////			if (params.size() == 3) {
+////				targetX = params[0];
+////				targetY = params[1];
+////				targetArea = params[2];
+////			}
+////			else {
+////				targetX = 0.0;
+////				targetY = 0.0;
+////				targetArea = 0.0;
+////			}
+////
+////			double moveSpeed = 0.5;
+////			double turnSpeed = 0.5;
+//		}
+//
+//		/*
+//		 * Approach cube until it is in the proper range to be picked up
+//		 */
+//		break;
+//	}
+//}
 
 START_ROBOT_CLASS(Robot)
