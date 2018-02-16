@@ -13,15 +13,21 @@
 #include "MyJoystick.h"
 #include "AHRS.h"
 
+
 class Robot : public IterativeRobot {
 public:
 // Components and Systems
 	Joystick leftStick, rightStick, handheld; // Joysticks
 	MyJoystick m_left, m_right, m_handheld; // Button reading for Joysticks
 	Spark l1, l2, r1, r2; // Drive motor controllers
+	Spark leftIO, rightIO; // IO motor controllers
+	Spark lift1, lift2; // Lifter motor controllers
 	AHRS *ahrs; // Purple sensor board
 	Compressor compressor;
-	DoubleSolenoid leftGearbox, rightGearbox;
+	DoubleSolenoid leftGearbox, rightGearbox, liftGearbox; // Gearbox shifters
+	DoubleSolenoid omniDropper;
+	Timer* timer;
+	DigitalInput* hallSensor;
 
 // Values and Structures
 	bool leftSwitch; // Is our color on the left side of the switch?
@@ -32,6 +38,11 @@ public:
 	bool pressureStatus;
 	float current;
 	int latestYaw;
+	bool turnSetup;
+
+	bool gl90, gr90, gl180, gr180;
+
+	int testStep;
 
 	enum FieldPosition { // Used for autonomous
 		leftPos,
@@ -42,21 +53,34 @@ public:
 	enum StepType { // Used for autonomous
 		reset,
 		encoderMove,
-		gyroTurn
+		gyroTurn,
+		cubeIO,
+		lifter,
+		trackCube
 	};
 
-	struct Step {
-		Robot *robot;
-		StepType type;
-		bool complete, setup;
-		std::vector<double> params;
-		Step(Robot *r, StepType steptype, std::vector<double> parameters);
-		~Step();
-		void Run();
+	enum Direction {
+		up,
+		down,
+		left,
+		right,
+		forward,
+		backward
 	};
 
-	std::vector<Step> autosteps;
+//	struct Step {
+////		Robot *robot;
+//		StepType type;
+//		bool complete, setup;
+//		std::vector<double> params;
+//		Step(Robot *r, StepType steptype, std::vector<double> parameters);
+//		~Step();
+//		void Run();
+//	};
+
+	std::vector<std::vector<double>> autosteps;
 	int numsteps, curstep;
+	bool stepSetup, stepComplete;
 
 // Stages
 
@@ -73,24 +97,36 @@ public:
 	void LeftAuto();
 	void CenterAuto();
 	void RightAuto();
+	void RunSteps();
 
 	// Teleoperated
 	void TeleopInit();
 	void TeleopPeriodic();
-	void SetLeftSpeed(float speed);
-	void SetRightSpeed(float speed);
+	void SetLeftSpeed(double speed);
+	void SetRightSpeed(double speed);
 	void StopMotors();
 	void TankDrive();
-	void GyroTurn(bool btn, float speed, double angle);
-	void GyroTurn(int pov, float speed);
+	void Gyro90L(bool btn);
+	void Gyro90R(bool btn);
+//	void Gyro180L(bool btn);
+//	void Gyro180R(bool btn);
 	void ManualShiftGears(bool upBtn, bool downBtn);
+	void ManualShiftLift(bool upBtn, bool downBtn);
+	void ManualCubeIO(bool inBtn, bool outBtn);
+	void DropOmnis(bool dropBtn, bool raiseBtn);
+	void HoldOmnis(bool btn);
 
 	// Test
 	void TestInit();
 	void TestPeriodic();
 
-	//Other
-	void ShiftGears(std::string dir);
+	//Other - functions that run in multiple states
+	void ShiftGears(Direction dir);
+	void ShiftLift(Direction dir);
+	void RunCubeIO(Direction dir);
+	void RunLifter(bool up, bool down);
+	void CheckHallSensor();
+
 };
 
 #endif /* SRC_PENGUINEMPIRE_H_ */
