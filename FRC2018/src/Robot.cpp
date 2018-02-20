@@ -197,141 +197,101 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 //		   {3, 0}
 //	};
 
-	rrr = {{3, 1},
-		   {2, 110, 1.0},
-		   {1, -90, 0.75},
-		   {2, 2, 0.5},
-		   {5, 0.5, 1.0},
-		   {2, -5, 0.75},
-		   {3, 0},
-		   {1, 90, 0.65},
-		   {2, 44, 0.75},
-		   {1, -90, 0.65},
-		   {2, 18, 0.65},
-		   {1, -75, 0.65},
-		   {7, 256, 384, 0.5},
-		   {6, -1.0},
-		   {4, 13, 0.65},
-		   {6, 0.0},
-		   {3, 1},
-		   {2, 2, 0.5},
-		   {5, 0.5, 1.0},
-		   {2, -5, 0.5},
-		   {3, 0}
+	rr = {{8},
+		  {9, 1, 75, 1.0},
+//		  {3, 1},
+//		  {2, 75, 1.0},
+		  {1, -90, 0.75},
+		  {2, 2, 0.5},
+		  {5, 0.5, 1.0},
+		  {9, 0, -5, 0.75},
+//		  {2, -5, 0.75},
+//		  {3, 0},
+		  {1, 90, 0.65},
+		  {2, 40, 0.75},
+		  {1, -90, 0.65},
+		  {2, 18, 0.65},
+		  {1, -75, 0.65},
+		  {7, 256, 384, 0.5},
+		  {6, -1.0},
+		  {4, 13, 0.65},
+		  {6, 0.0},
+		  {3, 1},
+		  {2, 2, 0.5},
+		  {5, 0.5, 1.0},
+		  {2, -5, 0.5},
+		  {3, 0}
 	};
 
-	rrl = {{3, 1},
-		   {2, 110, 1.0},
-		   {1, -90, 0.75},
-		   {2, 2, 0.5},
-		   {5, 0.5, 1.0},
-		   {2, -5, 0.75},
-		   {3, 0},
-		   {1, 90, 0.65},
-		   {2, 44, 0.75},
-		   {1, -90, 0.65},
-		   {2, 18, 0.65},
-		   {1, -75, 0.65},
-		   {7, 256, 384, 0.5},
-		   {6, -1.0},
-		   {4, 13, 0.65},
-		   {6, 0.0},
-		   {3, 1},
-		   {2, 2, 0.5},
-		   {5, 0.5, 1.0},
-		   {2, -5, 0.5},
-		   {3, 0}
+	rl = {{8},
+		  {9, 1, 204, 1.0},
+//		  {3, 1},
+//		  {2, 204, 1.0},
+		  {1, -90, 0.65}
 	};
 
-	rll = {{3, 1},
-		   {2, 204, 1.0},
-		   {1, -90, 0.65}
+	ll = {{8},
+		  {9, 1, 120, 1.0},
+//		  {3, 1},
+//		  {2, 120, 1.0},
+		  {1, 90, 0.75},
+		  {2, 2, 0.5},
+		  {5, 0.5, 1.0},
+		  {2, -5, 0.75},
+		  {3, 0},
+		  {1, -90, 0.65},
+		  {2, 47, 0.75},
+		  {1, -90, 0.65},
+		  {2, 18, 0.65},
+		  {1, 75, 0.65},
+		  {7, 256, 384, 0.5},
+		  {6, -1.0},
+		  {4, 13, 0.65},
+		  {6, 0.0},
+		  {3, 1},
+		  {2, 2, 0.5},
+		  {5, 0.5, 1.0},
+		  {2, -5, 0.5},
+		  {3, 0}
 	};
 
-	lll = {{3, 1},
-		   {2, 110, 1.0},
-		   {1, 90, 0.75},
-		   {2, 2, 0.5},
-		   {5, 0.5, 1.0},
-		   {2, -5, 0.75},
-		   {3, 0},
-		   {1, -90, 0.65},
-		   {2, 44, 0.75},
-		   {1, 90, 0.65},
-		   {2, 18, 0.65},
-		   {1, 75, 0.65},
-		   {7, 256, 384, 0.5},
-		   {6, -1.0},
-		   {4, 13, 0.65},
-		   {6, 0.0},
-		   {3, 1},
-		   {2, 2, 0.5},
-		   {5, 0.5, 1.0},
-		   {2, -5, 0.5},
-		   {3, 0}
+	lr = {{8},
+		  {9, 1, 204, 1.0},
+//		  {3, 1},
+//		  {2, 204, 1.0},
+		  {1, 90, 0.65}
 	};
 
-	llr = {{3, 1},
-		   {2, 110, 1.0},
-		   {1, 90, 0.75},
-		   {2, 2, 0.5},
-		   {5, 0.5, 1.0},
-		   {2, -5, 0.75},
-		   {3, 0},
-		   {1, -90, 0.65},
-		   {2, 44, 0.75},
-		   {1, 90, 0.65},
-		   {2, 18, 0.65},
-		   {1, 75, 0.65},
-		   {7, 256, 384, 0.5},
-		   {6, -1.0},
-		   {4, 13, 0.65},
-		   {6, 0.0},
-		   {3, 1},
-		   {2, 2, 0.5},
-		   {5, 0.5, 1.0},
-		   {2, -5, 0.5},
-		   {3, 0}
+	cl = {{8},
+		  {9, 1, 48, 0.65},
+//		  {3, 1},
+//		  {2, 48, 0.65},
+		  {1, -45, 0.75},
+		  {2, 60, 0.65},
+		  {1, 45, 0.75},
+		  {2, 24, 0.65},
+		  {5, 0.5, 1.0}
 	};
 
-	lrr = {{3, 1},
-		   {2, 204, 1.0},
-		   {1, 90, 0.65}
+	cr = {{8},
+		  {9, 1, 48, 0.65},
+//		  {3, 1},
+//		  {2, 48, 0.65},
+		  {1, 45, 0.75},
+		  {2, 60, 0.65},
+		  {1, -45, 0.75},
+		  {2, 24, 0.65},
+		  {5, 0.5, 1.0}
 	};
 
-	cll = {{3, 1},
-		   {2, 24, 0.65},
-		   {1, -45, 0.75},
-		   {2, 24, 0.65},
-		   {1, 45, 0.75}
-	};
-
-	clr = {{3, 1},
-		   {2, 24, 0.65},
-		   {1, -45, 0.75},
-		   {2, 24, 0.65},
-		   {1, 45, 0.75}
-	};
-
-	crr = {{3, 1},
-		   {2, 24, 0.65},
-		   {1, 45, 0.75},
-		   {2, 24, 0.65},
-		   {1, -45, 0.75}
-	};
-
-	crl = {{3, 1},
-		   {2, 24, 0.65},
-		   {1, 45, 0.75},
-		   {2, 24, 0.65},
-		   {1, -45, 0.75}
-	};
 	mode = "lll";
 
 	curstep = 0;
 	numsteps = 0;
 	stepSetup = true;
 	stepComplete = false;
+	comboLift = false;
+	comboDrive = false;
 
 	l1.SetExpiration(0.1);
 	l2.SetExpiration(0.1);
@@ -400,53 +360,29 @@ void Robot::AutonomousInit() { // Runs at start of autonomous phase, only once
 
 	CheckSide();
 	fpos = CheckPos();
-	if (fpos == 0 && leftSwitch && leftScale) {
-		autosteps = lll;
-		mode = "lll";
+	if (fpos == 0 && leftSwitch) {
+		autosteps = ll;
+		mode = "ll";
 	}
-	else if (fpos == 0 && leftSwitch && !leftScale) {
-		autosteps = llr;
-		mode = "llr";
+	else if (fpos == 0 && !leftSwitch) {
+		autosteps = lr;
+		mode = "lr";
 	}
-	else if (fpos == 0 && !leftSwitch && leftScale) {
-		autosteps = lrl;
-		mode = "lrl";
+	else if (fpos == 1 && leftSwitch) {
+		autosteps = cl;
+		mode = "cl";
 	}
-	else if (fpos == 0 && !leftSwitch && !leftScale) {
-		autosteps = lrr;
-		mode = "lrr";
+	else if (fpos == 1 && !leftSwitch) {
+		autosteps = cr;
+		mode = "cr";
 	}
-	else if (fpos == 1 && leftSwitch && leftScale) {
-		autosteps = cll;
-		mode = "cll";
+	else if (fpos == 2 && leftSwitch) {
+		autosteps = rl;
+		mode = "rl";
 	}
-	else if (fpos == 1 && leftSwitch && !leftScale) {
-		autosteps = clr;
-		mode = "clr";
-	}
-	else if (fpos == 1 && !leftSwitch && leftScale) {
-		autosteps = crl;
-		mode = "crl";
-	}
-	else if (fpos == 1 && !leftSwitch && !leftScale) {
-		autosteps = crr;
-		mode = "crr";
-	}
-	else if (fpos == 2 && leftSwitch && leftScale) {
-		autosteps = rll;
-		mode = "rll";
-	}
-	else if (fpos == 2 && leftSwitch && !leftScale) {
-		autosteps = rlr;
-		mode = "rlr";
-	}
-	else if (fpos == 2 && !leftSwitch && leftScale) {
-		autosteps = rrl;
-		mode = "rrl";
-	}
-	else if (fpos == 2 && !leftSwitch && !leftScale) {
-		autosteps = rrr;
-		mode = "rrr";
+	else if (fpos == 2 && !leftSwitch) {
+		autosteps = rr;
+		mode = "rr";
 	}
 
 	//Auto Aim Params: minX = 256, maxX = 384
@@ -494,9 +430,10 @@ void Robot::AutonomousPeriodic() { // Looped through iteratively during autonomo
 	SmartDashboard::PutNumberArray("Center Y", centerY);
 	SmartDashboard::PutNumberArray("Area", area);
 	SmartDashboard::PutNumberArray("Width", width);
-	SmartDashboard::PutNumber("Left Encoder", leftEnc.Get());
-	SmartDashboard::PutNumber("Right Encoder", rightEnc.Get());
-
+	SmartDashboard::PutNumber("Left Encoder", leftEnc.GetDistance());
+	SmartDashboard::PutNumber("Right Encoder", rightEnc.GetDistance());
+	SmartDashboard::PutNumber("Average Distance", (rightEnc.GetDistance() - leftEnc.GetDistance()) / 2);
+	SmartDashboard::PutNumber("Yaw", ahrs->GetYaw());
 	centerX = contour->GetNumberArray("centerX", llvm::ArrayRef<double>());
 	centerY = contour->GetNumberArray("centerY", llvm::ArrayRef<double>());
 	area = contour->GetNumberArray("area", llvm::ArrayRef<double>());
@@ -526,13 +463,6 @@ void Robot::CheckSide() {
 	}
 	else {
 		leftSwitch = false;
-	}
-
-	if (gamedata[1] == 'L') {
-		leftScale = true;
-	}
-	else {
-		leftScale = false;
 	}
 }
 
@@ -731,7 +661,7 @@ void Robot::RunSteps() {
 					}
 				}
 			}
-			else if (step[0] == 60) {
+			else if (step[0] == 8) { // Shift drive gears down {8}
 				if (stepSetup) {
 					ResetAll();
 					StopMotors();
@@ -740,6 +670,75 @@ void Robot::RunSteps() {
 				else {
 					ShiftGears(down);
 					stepComplete = true;
+				}
+			}
+			else if (step[0] == 9) { // Combination lift and move {9, stage, dist, speed}
+				if (stepSetup) {
+					ResetAll();
+					StopMotors();
+					lift1.Set(0.0);
+					lift2.Set(0.0);
+					stepSetup = false;
+				}
+				else {
+					if (!comboLift) {
+						int stage = step[1];
+						switch (stage) {
+						case 0:
+							AutoRunLifter(false, true);
+							if (!bottomSensor->Get()) {
+								lift1.Set(0.0);
+								lift2.Set(0.0);
+								comboLift = true;
+							}
+							break;
+						case 1:
+							if (!bottomSensor->Get()) {
+								AutoRunLifter(true, false);
+							}
+							else if (!topSensor->Get()) {
+								AutoRunLifter(false, true);
+							}
+
+							if (!switchSensor->Get()) {
+								lift1.Set(0.0);
+								lift2.Set(0.0);
+								comboLift = true;
+							}
+							break;
+						case 2:
+							AutoRunLifter(true, false);
+							if (!topSensor->Get()) {
+								lift1.Set(0.0);
+								lift2.Set(0.0);
+								comboLift = true;
+							}
+						}
+					}
+
+					if (!comboDrive) {
+						double avgEnc = (rightEnc.GetDistance() - leftEnc.GetDistance()) / 2;
+						if (step[2] > 0 && avgEnc < step[2]) {
+							SetLeftSpeed(step[3]);
+							SetRightSpeed(step[3]);
+						}
+						else if (step[2] < 0 && avgEnc > step[2]) {
+							SetLeftSpeed(-step[3]);
+							SetRightSpeed(-step[3]);
+						}
+						else {
+							SetLeftSpeed(0.0);
+							SetRightSpeed(0.0);
+							ResetAll();
+							comboDrive = true;
+						}
+					}
+
+					if (comboLift && comboDrive) {
+						StopMotors();
+						ResetAll();
+						stepComplete = true;
+					}
 				}
 			}
 			else if (step[0] == 97) { // IO Hold {97, max dist, speed}
@@ -784,6 +783,8 @@ void Robot::RunSteps() {
 		}
 		else {
 			curstep++;
+			comboLift = false;
+			comboDrive = false;
 			stepSetup = true;
 			stepComplete = false;
 		}

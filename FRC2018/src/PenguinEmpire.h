@@ -69,16 +69,12 @@ public:
 	float current;
 	int latestYaw;
 	bool turnSetup;
+	bool comboLift;
+	bool comboDrive;
 
 	bool gl90, gr90, gl180, gr180;
 
 	int testStep;
-
-	enum FieldPosition { // Used for autonomous
-		leftPos,
-		centerPos,
-		rightPos
-	} /*fpos*/;
 
 	enum StepType { // Used for autonomous
 		reset,
@@ -109,7 +105,7 @@ public:
 //	};
 
 	std::vector<std::vector<double>> autosteps;
-	std::vector<std::vector<double>> lll, llr, lrl, lrr, cll, clr, crl, crr, rll, rlr, rrl, rrr;
+	std::vector<std::vector<double>> ll, lr, cl, cr, rl, rr;
 	int numsteps, curstep;
 	bool stepSetup, stepComplete;
 	int fpos;
