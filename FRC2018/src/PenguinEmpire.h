@@ -49,14 +49,15 @@ public:
 	Spark lift1, lift2; // Lifter motor controllers
 	AHRS *ahrs; // Purple sensor board
 	Compressor compressor;
-	DoubleSolenoid leftGearbox, rightGearbox, liftGearbox; // Gearbox shifters
-	DoubleSolenoid omniDropper;
+	DoubleSolenoid driveGearboxes, liftGearbox, omniDropper; // Gearbox shifters and omni actuator
 	Timer* mainTimer;
 	Timer* lidarTimer;
 	Lidar* lidar;
 	DigitalInput* bottomSensor;
 	DigitalInput* switchSensor;
 	DigitalInput* topSensor;
+	DigitalInput* centerPosSwitch;
+	DigitalInput* rightPosSwitch;
 	Encoder leftEnc, rightEnc;
 
 // Values and Structures

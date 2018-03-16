@@ -93,8 +93,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	lift1(pwm6),
 	lift2(pwm7),
 	compressor(pcm0),
-	leftGearbox(pcm0, pch0, pch1),
-	rightGearbox(pcm0, pch2, pch3),
+	driveGearboxes(pcm0, pch0, pch1),
 	liftGearbox(pcm0, pch4, pch5),
 	omniDropper(pcm0, pch6, pch7),
 	leftEnc(dio1, dio0),
@@ -304,6 +303,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	bottomSensor = new DigitalInput(dio7);
 	switchSensor = new DigitalInput(dio8);
 	topSensor = new DigitalInput(dio9);
+	centerPosSwitch = new DigitalInput(dio0);
+	rightPosSwitch = new DigitalInput(dio1);
 	testStep = 0;
 
 	leftEnc.SetDistancePerPulse(pulseIn);
@@ -330,6 +331,9 @@ Robot::~Robot() { // Robot destructor - Delete pointer values here
 }
 
 void Robot::RobotInit() { // Runs only when robot code starts initially
+	// Initialize camera server
+//	CameraServer::GetInstance()->StartAutomaticCapture("cam0", 0);
+
 	// Set Spark inversion
 	l1.SetInverted(false);
 	l2.SetInverted(false);
@@ -468,8 +472,20 @@ void Robot::CheckSide() {
 
 int Robot::CheckPos() {
 	/*
-	 * Check TBD physical switch
+	 * Check physical switch
 	 */
+
+	if (centerPosSwitch->Get()) {
+		return 1;
+	}
+	else {
+		if (rightPosSwitch->Get()) {
+			return 2;
+		}
+		else {
+			return 0;
+		}
+	}
 
 	return 2;
 }
@@ -843,9 +859,9 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 //	Gyro180L(m_left.ReadButton(11));
 //	Gyro180R(m_left.ReadButton(12));
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
-	ManualShiftLift(m_left.ReadButton(6), m_left.ReadButton(4));
-	ManualCubeIO(m_left.ReadButton(1), m_right.ReadButton(1));
-	RunLifter(m_right.ReadButton(5), m_right.ReadButton(3));
+	ManualShiftLift(m_handheld.ReadButton(4), m_handheld.ReadButton(2));
+	ManualCubeIO(m_handheld.ReadButton(8), m_handheld.ReadButton(6));
+	RunLifter(m_handheld.ReadButton(5), m_handheld.ReadButton(2));
 //	DropOmnis(m_left.ReadButton(5), m_left.ReadButton(3));
 	HoldOmnis(m_right.ReadButton(2));
 	CheckHallSensor();
@@ -1116,8 +1132,7 @@ void Robot::ShiftGears(Direction dir) {
 		state = DoubleSolenoid::kReverse;
 	}
 
-	leftGearbox.Set(state);
-	rightGearbox.Set(state);
+	driveGearboxes.Set(state);
 }
 
 void Robot::ShiftLift(Direction dir) {
