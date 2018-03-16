@@ -866,6 +866,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	RunLifter(m_handheld.ReadButton(5), m_handheld.ReadButton(2));
 //	DropOmnis(m_left.ReadButton(5), m_left.ReadButton(3));
 	HoldOmnis(m_right.ReadButton(2));
+	ToggleSwitchSensor(m_handheld.ReadButton(1), m_handheld.ReadButton(3));
 	CheckHallSensor();
 
 
