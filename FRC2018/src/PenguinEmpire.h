@@ -115,6 +115,7 @@ public:
 	int lastLiftState;
 	bool haltLifter;
 	bool goingPastSwitch;
+	bool checkSwitch;
 
 	std::shared_ptr<NetworkTable> contour;
 	std::vector<double> centerX, centerY, area, width;
@@ -154,6 +155,7 @@ public:
 	void ManualCubeIO(bool inBtn, bool outBtn);
 	void DropOmnis(bool dropBtn, bool raiseBtn);
 	void HoldOmnis(bool btn);
+	void ToggleSwitchSensor(bool on, bool off);
 
 	// Test
 	void TestInit();

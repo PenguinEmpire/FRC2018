@@ -313,6 +313,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	lastLiftState = 0;
 	haltLifter = false;
 	goingPastSwitch = false;
+	checkSwitch = true;
 
 	lidarTimer = new Timer();
 	lidar = new Lidar;
@@ -424,6 +425,7 @@ void Robot::AutonomousInit() { // Runs at start of autonomous phase, only once
 //				 {3, 0}};
 
 	numsteps = autosteps.size();
+	checkSwitch = true;
 }
 
 void Robot::AutonomousPeriodic() { // Looped through iteratively during autonomous phase - do not put loops here!
@@ -1099,6 +1101,16 @@ void Robot::HoldOmnis(bool btn) {
 	}
 }
 
+void Robot::ToggleSwitchSensor(bool on, bool off) {
+	if (on) {
+		checkSwitch = true;
+	}
+
+	if (off) {
+		checkSwitch = false;
+	}
+}
+
 void Robot::TestInit() { // Runs at start of test phase, only once
 
 }
@@ -1191,7 +1203,7 @@ void Robot::RunLifter(bool up, bool down) {
 			lift2.Set(upSpeed);
 		}
 	}
-	else if (!switchSensor->Get()) {
+	else if (!switchSensor->Get() && checkSwitch) {
 		if ((up || down) && !goingPastSwitch) {
 			haltLifter = true;
 			lift1.Set(0.0);
