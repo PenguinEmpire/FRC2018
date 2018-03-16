@@ -94,8 +94,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	lift2(pwm7),
 	compressor(pcm0),
 	driveGearboxes(pcm0, pch0, pch1),
-	liftGearbox(pcm0, pch4, pch5),
-	omniDropper(pcm0, pch6, pch7),
+	liftGearbox(pcm0, pch6, pch7),
+	omniDropper(pcm0, pch4, pch5),
 	leftEnc(dio1, dio0),
 	rightEnc(dio3, dio2)
 
@@ -197,20 +197,28 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 //	};
 
 	rr = {{8},
-		  {9, 1, 75, 1.0},
+		  {9, 1, 125, 1.0},
 //		  {3, 1},
 //		  {2, 75, 1.0},
+		  {10, 1},
 		  {1, -90, 0.75},
-		  {2, 2, 0.5},
+		  {10, 0},
+		  {2, 15, 0.5},
 		  {5, 0.5, 1.0},
-		  {9, 0, -5, 0.75},
+		  {9, 0, -15, 0.75},
 //		  {2, -5, 0.75},
 //		  {3, 0},
+		  {10, 1},
 		  {1, 90, 0.65},
+		  {10, 0},
 		  {2, 40, 0.75},
+		  {10, 1},
 		  {1, -90, 0.65},
+		  {10, 0},
 		  {2, 18, 0.65},
+		  {10, 1},
 		  {1, -75, 0.65},
+		  {10, 0},
 		  {7, 256, 384, 0.5},
 		  {6, -1.0},
 		  {4, 13, 0.65},
@@ -230,7 +238,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	};
 
 	ll = {{8},
-		  {9, 1, 120, 1.0},
+		  {9, 1, 125, 1.0},
 //		  {3, 1},
 //		  {2, 120, 1.0},
 		  {1, 90, 0.75},
@@ -303,8 +311,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	bottomSensor = new DigitalInput(dio7);
 	switchSensor = new DigitalInput(dio8);
 	topSensor = new DigitalInput(dio9);
-	centerPosSwitch = new DigitalInput(dio0);
-	rightPosSwitch = new DigitalInput(dio1);
+	centerPosSwitch = new DigitalInput(dio4);
+	rightPosSwitch = new DigitalInput(dio5);
 	testStep = 0;
 
 	leftEnc.SetDistancePerPulse(pulseIn);
@@ -425,6 +433,7 @@ void Robot::AutonomousInit() { // Runs at start of autonomous phase, only once
 //				 {3, 0}};
 
 	numsteps = autosteps.size();
+	ShiftLift(down);
 	checkSwitch = true;
 }
 
@@ -759,6 +768,15 @@ void Robot::RunSteps() {
 					}
 				}
 			}
+			else if (step[0] == 10) {
+				if (step[1] == 1) {
+					omniDropper.Set(DoubleSolenoid::kReverse);
+				}
+				else {
+					omniDropper.Set(DoubleSolenoid::kForward);
+				}
+				stepComplete = true;
+			}
 			else if (step[0] == 97) { // IO Hold {97, max dist, speed}
 				if (stepSetup) {
 					ResetAll();
@@ -863,7 +881,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
 	ManualShiftLift(m_handheld.ReadButton(4), m_handheld.ReadButton(2));
 	ManualCubeIO(m_handheld.ReadButton(8), m_handheld.ReadButton(6));
-	RunLifter(m_handheld.ReadButton(5), m_handheld.ReadButton(2));
+	RunLifter(m_handheld.ReadButton(5), m_handheld.ReadButton(7));
 //	DropOmnis(m_left.ReadButton(5), m_left.ReadButton(3));
 	HoldOmnis(m_right.ReadButton(2));
 	ToggleSwitchSensor(m_handheld.ReadButton(1), m_handheld.ReadButton(3));
@@ -878,6 +896,8 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	SmartDashboard::PutNumber("Average Distance", (rightEnc.GetDistance() - leftEnc.GetDistance()) / 2);
 	SmartDashboard::PutBoolean("Hall Sensor", topSensor->Get());
 	SmartDashboard::PutNumber("LIDAR", dist);
+	SmartDashboard::PutBoolean("centerPos", centerPosSwitch->Get());
+	SmartDashboard::PutBoolean("rightPos", rightPosSwitch->Get());
 }
 
 /*
