@@ -203,7 +203,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {10, 1},
 		  {1, -60, 0.75},
 		  {10, 0},
-		  {2, 26, 0.5},
+		  {2, 26, 0.75},
 		  {5, 0.5, 1.0},
 		  {9, 0, -26, 0.75},
 //		  {2, -5, 0.75},
@@ -211,13 +211,13 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {10, 1},
 		  {1, 60, 0.65},
 		  {10, 0},
-		  {2, 76, 0.75},
+		  {2, 88, 0.90},
 		  {10, 1},
 		  {1, -60, 0.65},
 		  {10, 0},
 		  {2, 54, 0.65},
 		  {10, 1},
-		  {1, -45, 0.65},
+		  {1, -60, 0.65},
 		  {10, 0},
 		  {7, 256, 384, 0.5},
 		  {6, -1.0},
@@ -234,7 +234,9 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {9, 1, 204, 1.0},
 //		  {3, 1},
 //		  {2, 204, 1.0},
-		  {1, -90, 0.65}
+		  {10, 1},
+		  {1, -60, 0.65},
+		  {10, 0}
 	};
 
 	ll = {{8},
@@ -258,7 +260,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {10, 0},
 		  {2, 54, 0.65},
 		  {10, 1},
-		  {1, 45, 0.65},
+		  {1, 60, 0.65},
 		  {10, 0},
 		  {7, 256, 384, 0.5},
 		  {6, -1.0},
@@ -275,7 +277,9 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {9, 1, 204, 1.0},
 //		  {3, 1},
 //		  {2, 204, 1.0},
-		  {1, 90, 0.65}
+		  {10, 1},
+		  {1, 90, 0.65},
+		  {10, 0}
 	};
 
 	cl = {{8},
@@ -286,7 +290,9 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {2, 60, 0.65},
 		  {1, 45, 0.75},
 		  {2, 24, 0.65},
-		  {5, 0.5, 1.0}
+		  {5, 0.5, 1.0},
+		  {2, -5, 0.5},
+		  {3, 0}
 	};
 
 	cr = {{8},
@@ -297,7 +303,9 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {2, 60, 0.65},
 		  {1, -45, 0.75},
 		  {2, 24, 0.65},
-		  {5, 0.5, 1.0}
+		  {5, 0.5, 1.0},
+		  {2, -5, 0.5},
+		  {3, 0}
 	};
 
 	mode = "lll";
