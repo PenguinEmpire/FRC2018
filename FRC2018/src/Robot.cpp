@@ -278,7 +278,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 //		  {3, 1},
 //		  {2, 204, 1.0},
 		  {10, 1},
-		  {1, 90, 0.65},
+		  {1, 60, 0.65},
 		  {10, 0}
 	};
 
