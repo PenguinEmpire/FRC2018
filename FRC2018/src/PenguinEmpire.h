@@ -116,6 +116,8 @@ public:
 	bool haltLifter;
 	bool goingPastSwitch;
 	bool checkSwitch;
+	bool ioForward, ioBackward;
+	bool released;
 
 	std::shared_ptr<NetworkTable> contour;
 	std::vector<double> centerX, centerY, area, width;
@@ -167,6 +169,7 @@ public:
 	void RunCubeIO(Direction dir);
 	void RunLifter(bool up, bool down);
 	void CheckHallSensor();
+	void ToggleIO(bool forward, bool backward);
 
 };
 

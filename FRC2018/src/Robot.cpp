@@ -201,7 +201,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 //		  {3, 1},
 //		  {2, 75, 1.0},
 		  {10, 1},
-		  {1, -60, 0.75},
+		  {1, -55, 0.75},
 		  {10, 0},
 		  {2, 26, 0.75},
 		  {5, 0.5, 1.0},
@@ -211,13 +211,13 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {10, 1},
 		  {1, 60, 0.65},
 		  {10, 0},
-		  {2, 88, 0.90},
+		  {2, 85, 0.90},
 		  {10, 1},
 		  {1, -60, 0.65},
 		  {10, 0},
 		  {2, 54, 0.65},
 		  {10, 1},
-		  {1, -60, 0.65},
+		  {1, -75, 0.65},
 		  {10, 0},
 		  {7, 256, 384, 0.5},
 		  {6, -1.0},
@@ -339,6 +339,9 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	haltLifter = false;
 	goingPastSwitch = false;
 	checkSwitch = true;
+	ioForward = false;
+	ioBackward = false;
+	released = true;
 
 	lidarTimer = new Timer();
 	lidar = new Lidar;
@@ -903,7 +906,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	HoldOmnis(m_right.ReadButton(2));
 	ToggleSwitchSensor(m_handheld.ReadButton(1), m_handheld.ReadButton(3));
 	CheckHallSensor();
-
+	ToggleIO(m_handheld.ReadButton(9), m_handheld.ReadButton(10));
 
 	//Send dashboard values
 	SmartDashboard::PutNumber("Gyro Turning Yaw", latestYaw);
@@ -1114,7 +1117,7 @@ void Robot::ManualCubeIO(bool in, bool out) {
 		leftIO.Set(outSpeed);
 		rightIO.Set(outSpeed);
 	}
-	else if (!in && !out) {
+	else if (!in && !out && !ioForward && !ioBackward) {
 		leftIO.Set(0.0);
 		rightIO.Set(0.0);
 	}
@@ -1319,6 +1322,36 @@ void Robot::CheckHallSensor() {
 //	SmartDashboard::PutBoolean("Sensor Detecting?", hallSensor->Get());
 }
 
+void Robot::ToggleIO(bool forward, bool backward) {
+	if ((forward || backward) && released) {
+		if (forward && ioForward) {
+			ioForward = false;
+		}
+		else if (forward && !ioForward){
+			ioForward = true;
+		}
+
+		if (backward && ioBackward) {
+			ioBackward = false;
+		}
+		else if (backward && !ioBackward) {
+			ioBackward = true;
+		}
+		released = false;
+	}
+	else if (!forward && !backward){
+		released = true;
+	}
+
+	if (ioForward) {
+		leftIO.Set(1.0);
+		rightIO.Set(1.0);
+	}
+	else if (ioBackward) {
+		leftIO.Set(1.0);
+		rightIO.Set(1.0);
+	}
+}
 //Robot::Step::Step(Robot* r , StepType steptype, std::vector<double> parameters) : robot(r) {
 //	params = parameters;
 //	type = steptype;
