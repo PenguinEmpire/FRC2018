@@ -96,8 +96,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	driveGearboxes(pcm0, pch0, pch1),
 	liftGearbox(pcm0, pch6, pch7),
 	omniDropper(pcm0, pch4, pch5),
-	leftEnc(dio1, dio0),
-	rightEnc(dio3, dio2)
+	leftEnc(dio3, dio2),
+	rightEnc(dio1, dio0)
 
 /*
  * things to change
@@ -283,28 +283,42 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	};
 
 	cl = {{8},
-		  {9, 1, 48, 0.65},
+		  {2, 18, 0.65},
 //		  {3, 1},
 //		  {2, 48, 0.65},
-		  {1, -45, 0.75},
-		  {2, 60, 0.65},
-		  {1, 45, 0.75},
-		  {2, 24, 0.65},
+		  {10, 1},
+		  {1, -30, 0.75},
+		  {10, 0},
+		  {9, 1, 36, 0.65},
+		  {10, 1},
+		  {1, 30, 0.75},
+		  {10, 0},
+//		  {2, 3, 0.65},
 		  {5, 0.5, 1.0},
 		  {2, -5, 0.5},
+		  {10, 1},
+		  {1, -60, 0.75},
+		  {10, 0},
 		  {3, 0}
 	};
 
 	cr = {{8},
-		  {9, 1, 48, 0.65},
+		  {2, 18, 0.65},
 //		  {3, 1},
 //		  {2, 48, 0.65},
-		  {1, 45, 0.75},
-		  {2, 60, 0.65},
-		  {1, -45, 0.75},
-		  {2, 24, 0.65},
+		  {10, 1},
+		  {1, 30, 0.75},
+		  {10, 0},
+		  {9, 1, 36, 0.65},
+		  {10, 1},
+		  {1, -30, 0.75},
+		  {10, 0},
+//		  {2, 3, 0.65},
 		  {5, 0.5, 1.0},
 		  {2, -5, 0.5},
+		  {10, 1},
+		  {1, 60, 0.75},
+		  {10, 0},
 		  {3, 0}
 	};
 
@@ -316,6 +330,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	stepComplete = false;
 	comboLift = false;
 	comboDrive = false;
+	autoDrop = false;
 
 	l1.SetExpiration(0.1);
 	l2.SetExpiration(0.1);
@@ -508,19 +523,19 @@ int Robot::CheckPos() {
 	 * Check physical switch
 	 */
 
-	if (centerPosSwitch->Get()) {
-		return 1;
-	}
-	else {
-		if (rightPosSwitch->Get()) {
-			return 2;
-		}
-		else {
-			return 0;
-		}
-	}
+//	if (centerPosSwitch->Get()) {
+//		return 1;
+//	}
+//	else {
+//		if (rightPosSwitch->Get()) {
+//			return 2;
+//		}
+//		else {
+//			return 0;
+//		}
+//	}
 
-	return 2;
+	return 1;
 }
 
 void Robot::RunSteps() {
@@ -902,9 +917,9 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 //	Gyro180L(m_left.ReadButton(11));
 //	Gyro180R(m_left.ReadButton(12));
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
-	ManualShiftLift(m_handheld.ReadButton(4), m_handheld.ReadButton(2));
-	ManualCubeIO(m_handheld.ReadButton(8), m_handheld.ReadButton(6));
-	RunLifter(m_handheld.ReadButton(5), m_handheld.ReadButton(7));
+	ManualShiftLift(m_left.ReadButton(6), m_left.ReadButton(4));
+	ManualCubeIO(m_left.ReadButton(1), m_right.ReadButton(1));
+	RunLifter(m_right.ReadButton(5), m_right.ReadButton(3));
 //	DropOmnis(m_left.ReadButton(5), m_left.ReadButton(3));
 	HoldOmnis(m_right.ReadButton(2));
 	ToggleSwitchSensor(m_handheld.ReadButton(1), m_handheld.ReadButton(3));
@@ -912,16 +927,22 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	ToggleIO(m_handheld.ReadButton(9), m_handheld.ReadButton(10));
 	ManualVision(m_left.ReadButton(2));
 
+	centerX = contour->GetNumberArray("centerX", llvm::ArrayRef<double>());
+
+
 	//Send dashboard values
 	SmartDashboard::PutNumber("Gyro Turning Yaw", latestYaw);
 	SmartDashboard::PutNumber("Current Yaw", ahrs->GetYaw());
 	SmartDashboard::PutNumber("Encoder L", leftEnc.GetDistance());
 	SmartDashboard::PutNumber("Encoder R", rightEnc.GetDistance());
 	SmartDashboard::PutNumber("Average Distance", (rightEnc.GetDistance() - leftEnc.GetDistance()) / 2);
-	SmartDashboard::PutBoolean("Hall Sensor", topSensor->Get());
+	SmartDashboard::PutBoolean("Top Sensor", topSensor->Get());
+	SmartDashboard::PutBoolean("Switch Sensor", switchSensor->Get());
+	SmartDashboard::PutBoolean("Bottom Sensor", bottomSensor->Get());
 	SmartDashboard::PutNumber("LIDAR", dist);
 	SmartDashboard::PutBoolean("centerPos", centerPosSwitch->Get());
 	SmartDashboard::PutBoolean("rightPos", rightPosSwitch->Get());
+	SmartDashboard::PutNumberArray("Center X", centerX);
 }
 
 /*
@@ -981,6 +1002,14 @@ void Robot::TankDrive() {
 	}
 	else {
 		SetRightSpeed(0.0);
+	}
+
+	if (fabs(rightInput - leftInput) > 0.5 && fabs(rightInput) > 0.5 && fabs(leftInput) > 0.5) {
+		omniDropper.Set(DoubleSolenoid::kReverse);
+		autoDrop = true;
+	}
+	else {
+		autoDrop = false;
 	}
 }
 
@@ -1141,44 +1170,45 @@ void Robot::HoldOmnis(bool btn) {
 	if (btn) {
 		omniDropper.Set(DoubleSolenoid::kReverse);
 	}
-	else {
+	else if (!autoDrop){
 		omniDropper.Set(DoubleSolenoid::kForward);
 	}
 }
 
 void Robot::ToggleSwitchSensor(bool on, bool off) {
-	if (on) {
-		checkSwitch = true;
-	}
+//	if (on) {
+//		checkSwitch = true;
+//	}
 
-	if (off) {
+//	if (off) {
 		checkSwitch = false;
-	}
+//	}
 }
 
 void Robot::ManualVision(bool btn) {
 	if (btn) {
-		if (!visionAligned) {
-			if (centerX.size() > 0) {
-				if (centerX[0] < 256) {
-					SetLeftSpeed(-0.5);
-					SetRightSpeed(0.5);
-				}
-				else if (centerX[0] > 384) {
-					SetLeftSpeed(0.5);
-					SetRightSpeed(-0.5);
-				}
-				else {
-					SetLeftSpeed(0.0);
-					SetRightSpeed(0.0);
-					visionAligned = true;
-				}
+		if (centerX.size() > 0) {
+			if (centerX[0] < 256) {
+				SetLeftSpeed(-0.5);
+				SetRightSpeed(0.5);
+				visionAligned = false;
+			}
+			else if (centerX[0] > 384) {
+				SetLeftSpeed(0.5);
+				SetRightSpeed(-0.5);
+				visionAligned = false;
+			}
+			else {
+				SetLeftSpeed(0.0);
+				SetRightSpeed(0.0);
+				visionAligned = true;
 			}
 		}
-		else {
-			if (lidar->AquireDistance() > 13) {
-				leftIO.Set(-0.5);
-				rightIO.Set(-0.5);
+
+		if (visionAligned) {
+			if (lidar->AquireDistance() > 25) {
+				leftIO.Set(-1.0);
+				rightIO.Set(-1.0);
 				SetLeftSpeed(0.65);
 				SetRightSpeed(0.65);
 			}

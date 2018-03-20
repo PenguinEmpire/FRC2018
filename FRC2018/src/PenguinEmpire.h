@@ -72,6 +72,7 @@ public:
 	bool turnSetup;
 	bool comboLift;
 	bool comboDrive;
+	bool autoDrop;
 
 	bool gl90, gr90, gl180, gr180;
 
