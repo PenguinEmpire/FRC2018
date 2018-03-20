@@ -847,6 +847,7 @@ void Robot::RunSteps() {
 	}
 }
 
+
 void Robot::ResetAll() {
 	ahrs->ZeroYaw();
 	leftEnc.Reset();
@@ -907,6 +908,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	ToggleSwitchSensor(m_handheld.ReadButton(1), m_handheld.ReadButton(3));
 	CheckHallSensor();
 	ToggleIO(m_handheld.ReadButton(9), m_handheld.ReadButton(10));
+	ManualVision(m_left.ReadButton(2));
 
 	//Send dashboard values
 	SmartDashboard::PutNumber("Gyro Turning Yaw", latestYaw);
@@ -1149,6 +1151,26 @@ void Robot::ToggleSwitchSensor(bool on, bool off) {
 
 	if (off) {
 		checkSwitch = false;
+	}
+}
+
+void Robot::ManualVision(bool btn) {
+	if (btn) {
+		if (centerX.size() > 0) {
+			if (centerX[0] < 256) {
+				SetLeftSpeed(-0.5);
+				SetRightSpeed(0.5);
+			}
+			else if (centerX[0] > 384) {
+				SetLeftSpeed(0.5);
+				SetRightSpeed(-0.5);
+			}
+			else {
+				ResetAll();
+				StopMotors();
+				stepComplete = true;
+			}
+		}
 	}
 }
 

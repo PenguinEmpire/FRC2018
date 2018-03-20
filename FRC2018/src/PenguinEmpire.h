@@ -158,6 +158,7 @@ public:
 	void DropOmnis(bool dropBtn, bool raiseBtn);
 	void HoldOmnis(bool btn);
 	void ToggleSwitchSensor(bool on, bool off);
+	void ManualVision(bool btn);
 
 	// Test
 	void TestInit();
