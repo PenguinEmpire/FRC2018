@@ -343,6 +343,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	ioBackward = false;
 	released = true;
 
+	visionAligned = false;
+
 	lidarTimer = new Timer();
 	lidar = new Lidar;
 	dist = 0;
@@ -1156,19 +1158,35 @@ void Robot::ToggleSwitchSensor(bool on, bool off) {
 
 void Robot::ManualVision(bool btn) {
 	if (btn) {
-		if (centerX.size() > 0) {
-			if (centerX[0] < 256) {
-				SetLeftSpeed(-0.5);
-				SetRightSpeed(0.5);
+		if (!visionAligned) {
+			if (centerX.size() > 0) {
+				if (centerX[0] < 256) {
+					SetLeftSpeed(-0.5);
+					SetRightSpeed(0.5);
+				}
+				else if (centerX[0] > 384) {
+					SetLeftSpeed(0.5);
+					SetRightSpeed(-0.5);
+				}
+				else {
+					SetLeftSpeed(0.0);
+					SetRightSpeed(0.0);
+					visionAligned = true;
+				}
 			}
-			else if (centerX[0] > 384) {
-				SetLeftSpeed(0.5);
-				SetRightSpeed(-0.5);
+		}
+		else {
+			if (lidar->AquireDistance() > 13) {
+				leftIO.Set(-0.5);
+				rightIO.Set(-0.5);
+				SetLeftSpeed(0.65);
+				SetRightSpeed(0.65);
 			}
 			else {
-				ResetAll();
-				StopMotors();
-				stepComplete = true;
+				leftIO.Set(0.0);
+				rightIO.Set(0.0);
+				SetLeftSpeed(0.0);
+				SetRightSpeed(0.0);
 			}
 		}
 	}

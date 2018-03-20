@@ -119,6 +119,8 @@ public:
 	bool ioForward, ioBackward;
 	bool released;
 
+	bool visionAligned;
+
 	std::shared_ptr<NetworkTable> contour;
 	std::vector<double> centerX, centerY, area, width;
 
