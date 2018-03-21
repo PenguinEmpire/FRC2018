@@ -107,7 +107,7 @@ public:
 //	};
 
 	std::vector<std::vector<double>> autosteps;
-	std::vector<std::vector<double>> ll, lr, cl, cr, rl, rr;
+	std::vector<std::vector<double>> lll, llr, lrl, lrr, cl, cr, rrr, rrl, rlr, rll;
 	int numsteps, curstep;
 	bool stepSetup, stepComplete;
 	int fpos;

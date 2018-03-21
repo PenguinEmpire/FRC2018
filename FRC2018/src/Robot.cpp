@@ -172,31 +172,31 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		 * 99: Loop all previous steps
 		 */
 
-//	rrr = {{3, 1},
-//		   {2, 115, 1.0},
-//		   {1, -90, 0.75},
-//		   {2, 2, 0.5},
-//		   {5, 0.5, 1.0},
-//		   {2, -5, 0.75},
-//		   {3, 0},
-//		   {1, 90, 0.75},
-//		   {2, 43, 0.85},
-//		   {1, -90, 0.75},
-//		   {2, 18, 0.65},
-//		   {1, -75, 0.75},
-//		   {7, 256, 384, 0.5},
-//		   {6, -1.0},
-//		   {4, 13, 0.65},
-//		   {6, 0.0},
-//		   {3, 1},
-//		   {1, 10, 1.0},
-//		   {2, 2, 0.5},
-//		   {5, 0.5, 1.0},
-//		   {2, -5, 0.5},
-//		   {3, 0}
-//	};
+	rrr = {{8},
+		   {9, 2, 210, 1.0},
+		   {10, 1},
+		   {1, -10, 0.5},
+		   {10, 1},
+		   {1, 5, 0.5},
+		   {5, 0.5, 1.0},
+		   {11, 1},
+		   {9, 0, -15, 0.5},
+		   {11, 0},
+		   {10, 1},
+		   {1, -150, 0.75},
+		   {10, 0},
+		   {7, 256, 384, 0.5},
+		   {6, -1.0},
+		   {4, 13, 0.65},
+		   {6, 0.0},
+		   {3, 1},
+		   {2, 2, 0.5},
+		   {5, 0.5, 1.0},
+		   {2, -5, 0.5},
+		   {3, 0}
+	};
 
-	rr = {{8},
+	rrl = {{8},
 		  {9, 1, 125, 1.0},
 //		  {3, 1},
 //		  {2, 75, 1.0},
@@ -230,55 +230,27 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {3, 0}
 	};
 
-	rl = {{8},
-		  {9, 1, 204, 1.0},
-//		  {3, 1},
-//		  {2, 204, 1.0},
-		  {10, 1},
-		  {1, -60, 0.65},
-		  {10, 0}
+	rlr = {{8},
+		   {9, 2, 210, 1.0},
+		   {10, 1},
+		   {1, -10, 0.5},
+		   {10, 1},
+		   {1, 5, 0.5},
+		   {5, 0.5, 1.0},
+		   {11, 1},
+		   {9, 0, -15, 0.5},
+		   {11, 0},
+		   {10, 1},
+		   {1, -150, 0.75},
+		   {10, 0}
 	};
 
-	ll = {{8},
-		  {9, 1, 125, 1.0},
-//		  {3, 1},
-//		  {2, 75, 1.0},
-		  {10, 1},
-		  {1, 55, 0.75},
-		  {10, 0},
-		  {2, 26, 0.75},
-		  {5, 0.5, 1.0},
-		  {9, 0, -26, 0.75},
-//		  {2, -5, 0.75},
-//		  {3, 0},
-		  {10, 1},
-		  {1, -60, 0.65},
-		  {10, 0},
-		  {2, 85, 0.90},
-		  {10, 1},
-		  {1, 60, 0.65},
-		  {10, 0},
-		  {2, 54, 0.65},
-		  {10, 1},
-		  {1, 75, 0.65},
-		  {10, 0},
-		  {7, 256, 384, 0.5},
-		  {6, -1.0},
-		  {4, 13, 0.65},
-		  {6, 0.0},
-		  {3, 1},
-		  {2, 2, 0.5},
-		  {5, 0.5, 1.0},
-		  {2, -5, 0.5},
-		  {3, 0}
-	};
-
-	lr = {{8},
+	rll = {{8},
 		  {9, 1, 204, 1.0},
 //		  {3, 1},
-//		  {2, 204, 1.0},
+//		  {2, 205, 1.0},
 		  {10, 1},
-		  {1, 60, 0.65},
+		  {1, -60, 0.65},
 		  {10, 0}
 	};
 
@@ -321,6 +293,89 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {10, 0},
 		  {3, 0}
 	};
+
+	lll = {{8},
+		   {9, 2, 210, 1.0},
+		   {10, 1},
+		   {1, 10, 0.5},
+		   {10, 1},
+		   {1, 5, 0.5},
+		   {5, 0.5, 1.0},
+		   {11, 1},
+		   {9, 0, -15, 0.5},
+		   {11, 0},
+		   {10, 1},
+		   {1, 150, 0.75},
+		   {10, 0},
+		   {7, 256, 384, 0.5},
+		   {6, -1.0},
+		   {4, 13, 0.65},
+		   {6, 0.0},
+		   {3, 1},
+		   {2, 2, 0.5},
+		   {5, 0.5, 1.0},
+		   {2, -5, 0.5},
+		   {3, 0}
+	};
+
+	llr = {{8},
+		  {9, 1, 125, 1.0},
+//		  {3, 1},
+//		  {2, 75, 1.0},
+		  {10, 1},
+		  {1, 55, 0.75},
+		  {10, 0},
+		  {2, 26, 0.75},
+		  {5, 0.5, 1.0},
+		  {9, 0, -26, 0.75},
+//		  {2, -5, 0.75},
+//		  {3, 0},
+		  {10, 1},
+		  {1, -60, 0.65},
+		  {10, 0},
+		  {2, 85, 0.90},
+		  {10, 1},
+		  {1, 60, 0.65},
+		  {10, 0},
+		  {2, 54, 0.65},
+		  {10, 1},
+		  {1, 75, 0.65},
+		  {10, 0},
+		  {7, 256, 384, 0.5},
+		  {6, -1.0},
+		  {4, 13, 0.65},
+		  {6, 0.0},
+		  {3, 1},
+		  {2, 2, 0.5},
+		  {5, 0.5, 1.0},
+		  {2, -5, 0.5},
+		  {3, 0}
+	};
+
+	lrl = {{8},
+		   {9, 2, 210, 1.0},
+		   {10, 1},
+		   {1, 10, 0.5},
+		   {10, 1},
+		   {1, 5, 0.5},
+		   {5, 0.5, 1.0},
+		   {11, 1},
+		   {9, 0, -15, 0.5},
+		   {11, 0},
+		   {10, 1},
+		   {1, 150, 0.75},
+		   {10, 0}
+	};
+
+	lrr = {{8},
+		  {9, 1, 204, 1.0},
+//		  {3, 1},
+//		  {2, 205, 1.0},
+		  {10, 1},
+		  {1, 60, 0.65},
+		  {10, 0}
+	};
+
 
 	mode = "lll";
 
@@ -410,13 +465,21 @@ void Robot::AutonomousInit() { // Runs at start of autonomous phase, only once
 
 	CheckSide();
 	fpos = CheckPos();
-	if (fpos == 0 && leftSwitch) {
-		autosteps = ll;
-		mode = "ll";
+	if (fpos == 0 && leftSwitch && leftScale) {
+		autosteps = lll;
+		mode = "lll";
 	}
-	else if (fpos == 0 && !leftSwitch) {
-		autosteps = lr;
-		mode = "lr";
+	else if (fpos == 0 && !leftSwitch && leftScale) {
+		autosteps = lrl;
+		mode = "lrl";
+	}
+	else if (fpos == 0 && leftSwitch && !leftScale) {
+		autosteps = llr;
+		mode = "llr";
+	}
+	else if (fpos == 0 && !leftSwitch && !leftScale) {
+		autosteps = lrr;
+		mode = "lrr";
 	}
 	else if (fpos == 1 && leftSwitch) {
 		autosteps = cl;
@@ -426,13 +489,21 @@ void Robot::AutonomousInit() { // Runs at start of autonomous phase, only once
 		autosteps = cr;
 		mode = "cr";
 	}
-	else if (fpos == 2 && leftSwitch) {
-		autosteps = rl;
-		mode = "rl";
+	else if (fpos == 2 && leftSwitch && leftScale) {
+		autosteps = rll;
+		mode = "rll";
 	}
-	else if (fpos == 2 && !leftSwitch) {
-		autosteps = rr;
-		mode = "rr";
+	else if (fpos == 2 && !leftSwitch && leftScale) {
+		autosteps = rrl;
+		mode = "rrl";
+	}
+	else if (fpos == 2 && leftSwitch && !leftScale) {
+		autosteps = rlr;
+		mode = "rlr";
+	}
+	else if (fpos == 2 && !leftSwitch && !leftScale) {
+		autosteps = rrr;
+		mode = "rrr";
 	}
 
 	//Auto Aim Params: minX = 256, maxX = 384
@@ -516,6 +587,13 @@ void Robot::CheckSide() {
 	else {
 		leftSwitch = false;
 	}
+
+	if (gamedata [1] == 'L') {
+		leftScale = true;
+	}
+	else {
+		leftScale = false;
+	}
 }
 
 int Robot::CheckPos() {
@@ -523,22 +601,27 @@ int Robot::CheckPos() {
 	 * Check physical switch
 	 */
 
-//	if (centerPosSwitch->Get()) {
-//		return 1;
-//	}
-//	else {
-//		if (rightPosSwitch->Get()) {
-//			return 2;
-//		}
-//		else {
-//			return 0;
-//		}
-//	}
+	if (centerPosSwitch->Get()) {
+		return 1;
+	}
+	else {
+		if (rightPosSwitch->Get()) {
+			return 2;
+		}
+		else {
+			return 0;
+		}
+	}
 
-	return 1;
+	// Comment out above conditionals and uncomment/change below value to spoof position on practice bot
+//	return 1;
 }
 
 void Robot::RunSteps() {
+	/*
+	 * Runs through the selected autonomous mode step by step
+	 */
+
 	if (curstep < numsteps) {
 		std::vector<double> step = autosteps[curstep];
 		SmartDashboard::PutNumber("Current Step", curstep);
@@ -805,7 +888,7 @@ void Robot::RunSteps() {
 					}
 				}
 			}
-			else if (step[0] == 10) {
+			else if (step[0] == 10) { // Set omni wheels {10, set}
 				if (step[1] == 1) {
 					omniDropper.Set(DoubleSolenoid::kReverse);
 				}
@@ -813,6 +896,14 @@ void Robot::RunSteps() {
 					omniDropper.Set(DoubleSolenoid::kForward);
 				}
 				stepComplete = true;
+			}
+			else if (step[0] == 11) {
+				if (step[1] == 1) {
+					ShiftLift(up);
+				}
+				else {
+					ShiftLift(down);
+				}
 			}
 			else if (step[0] == 97) { // IO Hold {97, max dist, speed}
 				if (stepSetup) {
