@@ -212,7 +212,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 //		  {2, -5, 0.75},
 //		  {3, 0},
 		  {10, 1},
-		  {1, 60, 0.65},
+		  {1, 55, 0.65},
 		  {10, 0},
 		  {2, 85, 0.90},
 		  {10, 1},
@@ -234,10 +234,11 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	};
 
 	rlr = {{8},
-		   {9, 2, 260, 1.0},
+		   {9, 1, 260, 1.0},
 		   {10, 1},
 		   {1, -30, 0.5},
 		   {10, 0},
+		   {3, 2},
 		   {2, 24, 0.5},
 		   {5, 0.5, 1.0},
 		   {2, -10, 0.5},
@@ -361,10 +362,11 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	};
 
 	lrl = {{8},
-		   {9, 2, 260, 1.0},
+		   {9, 1, 260, 1.0},
 		   {10, 1},
 		   {1, 30, 0.5},
 		   {10, 0},
+		   {3, 2},
 		   {2, 24, 0.5},
 		   {5, 0.5, 1.0},
 		   {2, -10, 0.5},
@@ -1020,8 +1022,9 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 //	Gyro180R(m_left.ReadButton(12));
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
 	ManualShiftLift(m_left.ReadButton(6), m_left.ReadButton(4));
-	ManualCubeIO(m_handheld.ReadButton(5), m_handheld.ReadButton(7));
+	ManualCubeIO(m_handheld.ReadButton(8), m_handheld.ReadButton(6));
 	RunLifter(m_right.ReadButton(1), m_left.ReadButton(1));
+	RunLifter(m_handheld.ReadButton(5), m_handheld.ReadButton(7));
 //	DropOmnis(m_left.ReadButton(5), m_left.ReadButton(3));
 	HoldOmnis(m_right.ReadButton(2));
 	ToggleSwitchSensor(m_handheld.ReadButton(1), m_handheld.ReadButton(3));
@@ -1240,9 +1243,9 @@ void Robot::ManualShiftLift(bool upBtn, bool downBtn) {
 }
 
 void Robot::ManualCubeIO(bool in, bool out) {
-	float inSpeedL = -0.65;
-	float inSpeedR = -0.65;
-	float outSpeed = 0.75;
+	float inSpeedL = -1.0;
+	float inSpeedR = -1.0;
+	float outSpeed = 1.0;
 
 	if (in && !out) {
 		leftIO.Set(inSpeedL);
