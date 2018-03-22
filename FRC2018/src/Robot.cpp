@@ -173,10 +173,11 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		 */
 
 	rrr = {{8},
-		   {9, 2, 260, 1.0},
+		   {9, 1, 260, 1.0},
 		   {10, 1},
-		   {1, -30, 0.5},
-		   {10, 1},
+		   {1, -40, 0.5},
+		   {10, 0},
+		   {3, 2},
 		   {2, 24, 0.5},
 		   {5, 0.5, 1.0},
 		   {2, -10, 0.5},
@@ -184,11 +185,12 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		   {9, 0, -14, 0.5},
 		   {11, 0},
 		   {10, 1},
-		   {1, -150, 0.75},
+		   {1, -75, 0.75},
 		   {10, 0},
+		   {2, 24, 0.65},
 		   {7, 256, 384, 0.5},
 		   {6, -1.0},
-		   {4, 13, 0.65},
+		   {4, 20, 0.65},
 		   {6, 0.0},
 		   {3, 1},
 		   {2, 2, 0.5},
@@ -222,7 +224,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {10, 0},
 		  {7, 256, 384, 0.5},
 		  {6, -1.0},
-		  {4, 13, 0.65},
+		  {4, 20, 0.65},
 		  {6, 0.0},
 		  {3, 1},
 		  {2, 2, 0.5},
@@ -258,17 +260,18 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	};
 
 	cl = {{8},
-		  {2, 18, 0.65},
+		  {2, 30, 0.65},
 //		  {3, 1},
 //		  {2, 48, 0.65},
 		  {10, 1},
-		  {1, -30, 0.75},
+		  {1, -30, 0.5},
 		  {10, 0},
-		  {9, 1, 36, 0.65},
+		  {9, 1, 60, 0.65},
 		  {10, 1},
-		  {1, 30, 0.75},
+		  {1, 30, 0.5},
 		  {10, 0},
 //		  {2, 3, 0.65},
+		  {2, 36, 0.65},
 		  {5, 0.5, 1.0},
 		  {2, -5, 0.5},
 		  {10, 1},
@@ -278,17 +281,18 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	};
 
 	cr = {{8},
-		  {2, 18, 0.65},
+		  {2, 30, 0.65},
 //		  {3, 1},
 //		  {2, 48, 0.65},
 		  {10, 1},
-		  {1, 30, 0.75},
+		  {1, 30, 0.5},
 		  {10, 0},
-		  {9, 1, 36, 0.65},
+		  {9, 1, 60, 0.65},
 		  {10, 1},
-		  {1, -30, 0.75},
+		  {1, -30, 0.5},
 		  {10, 0},
 //		  {2, 3, 0.65},
+		  {2, 36, 0.65},
 		  {5, 0.5, 1.0},
 		  {2, -5, 0.5},
 		  {10, 1},
@@ -298,10 +302,10 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	};
 
 	lll = {{8},
-		   {9, 2, 260, 1.0},
+		   {9, 1, 260, 1.0},
 		   {10, 1},
-		   {1, 30, 0.5},
-		   {10, 1},
+		   {1, 40, 0.5},
+		   {10, 0},
 		   {2, 24, 0.5},
 		   {5, 0.5, 1.0},
 		   {2, -10, 0.5},
@@ -309,11 +313,11 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		   {9, 0, -14, 0.5},
 		   {11, 0},
 		   {10, 1},
-		   {1, 150, 0.75},
+		   {1, 75, 0.75},
 		   {10, 0},
 		   {7, 256, 384, 0.5},
 		   {6, -1.0},
-		   {4, 13, 0.65},
+		   {4, 20, 0.65},
 		   {6, 0.0},
 		   {3, 1},
 		   {2, 2, 0.5},
@@ -347,7 +351,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {10, 0},
 		  {7, 256, 384, 0.5},
 		  {6, -1.0},
-		  {4, 13, 0.65},
+		  {4, 20, 0.65},
 		  {6, 0.0},
 		  {3, 1},
 		  {2, 2, 0.5},
@@ -910,6 +914,7 @@ void Robot::RunSteps() {
 				else {
 					ShiftLift(down);
 				}
+				stepComplete = true;
 			}
 			else if (step[0] == 97) { // IO Hold {97, max dist, speed}
 				if (stepSetup) {
@@ -1015,7 +1020,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 //	Gyro180R(m_left.ReadButton(12));
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
 	ManualShiftLift(m_left.ReadButton(6), m_left.ReadButton(4));
-	ManualCubeIO(m_handheld.ReadButton(5), m_right.ReadButton(7));
+	ManualCubeIO(m_handheld.ReadButton(5), m_handheld.ReadButton(7));
 	RunLifter(m_right.ReadButton(1), m_left.ReadButton(1));
 //	DropOmnis(m_left.ReadButton(5), m_left.ReadButton(3));
 	HoldOmnis(m_right.ReadButton(2));
