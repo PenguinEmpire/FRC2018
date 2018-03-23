@@ -204,7 +204,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 //		  {3, 1},
 //		  {2, 75, 1.0},
 		  {10, 1},
-		  {1, -55, 0.75},
+		  {1, -60, 0.75},
 		  {10, 0},
 		  {2, 26, 0.75},
 		  {5, 0.5, 1.0},
@@ -212,7 +212,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 //		  {2, -5, 0.75},
 //		  {3, 0},
 		  {10, 1},
-		  {1, 55, 0.65},
+		  {1, 60, 0.65},
 		  {10, 0},
 		  {2, 85, 0.90},
 		  {10, 1},
@@ -261,13 +261,13 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	};
 
 	cl = {{8},
-		  {2, 30, 0.65},
+		  {2, 27, 0.65},
 //		  {3, 1},
 //		  {2, 48, 0.65},
 		  {10, 1},
 		  {1, -30, 0.5},
 		  {10, 0},
-		  {9, 1, 60, 0.65},
+		  {9, 1, 63, 0.65},
 		  {10, 1},
 		  {1, 30, 0.5},
 		  {10, 0},
@@ -332,7 +332,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 //		  {3, 1},
 //		  {2, 75, 1.0},
 		  {10, 1},
-		  {1, 55, 0.75},
+		  {1, 60, 0.75},
 		  {10, 0},
 		  {2, 26, 0.75},
 		  {5, 0.5, 1.0},
@@ -1023,8 +1023,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
 	ManualShiftLift(m_left.ReadButton(6), m_left.ReadButton(4));
 	ManualCubeIO(m_handheld.ReadButton(8), m_handheld.ReadButton(6));
-	RunLifter(m_right.ReadButton(1), m_left.ReadButton(1));
-	RunLifter(m_handheld.ReadButton(5), m_handheld.ReadButton(7));
+	RunLifter(m_handheld.ReadButton(5) || m_right.ReadButton(1), m_handheld.ReadButton(7) || m_left.ReadButton(1));
 //	DropOmnis(m_left.ReadButton(5), m_left.ReadButton(3));
 	HoldOmnis(m_right.ReadButton(2));
 	ToggleSwitchSensor(m_handheld.ReadButton(1), m_handheld.ReadButton(3));
@@ -1109,13 +1108,13 @@ void Robot::TankDrive() {
 		SetRightSpeed(0.0);
 	}
 
-	if (fabs(rightInput - leftInput) > 0.5 && fabs(rightInput) > 0.5 && fabs(leftInput) > 0.5) {
-		omniDropper.Set(DoubleSolenoid::kReverse);
-		autoDrop = true;
-	}
-	else {
-		autoDrop = false;
-	}
+//	if (fabs(rightInput - leftInput) > 0.5 && fabs(rightInput) > 0.5 && fabs(leftInput) > 0.5) {
+//		omniDropper.Set(DoubleSolenoid::kReverse);
+//		autoDrop = true;
+//	}
+//	else {
+//		autoDrop = false;
+//	}
 }
 
 void Robot::Gyro90L(bool btn) {
@@ -1281,13 +1280,13 @@ void Robot::HoldOmnis(bool btn) {
 }
 
 void Robot::ToggleSwitchSensor(bool on, bool off) {
-//	if (on) {
-//		checkSwitch = true;
-//	}
+	if (on) {
+		checkSwitch = true;
+	}
 
-//	if (off) {
+	if (off) {
 		checkSwitch = false;
-//	}
+	}
 }
 
 void Robot::ManualVision(bool btn) {
