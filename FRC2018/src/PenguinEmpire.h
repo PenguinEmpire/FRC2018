@@ -119,6 +119,9 @@ public:
 	bool checkSwitch;
 	bool ioForward, ioBackward;
 	bool released;
+	bool autoRaise;
+	long raiseCounter;
+	int sightCounter;
 
 	bool visionAligned;
 

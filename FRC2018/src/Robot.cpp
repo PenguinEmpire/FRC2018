@@ -84,14 +84,14 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	leftStick(usb0),
 	rightStick(usb1),
 	handheld(usb2),
-	l1(pwm0),
-	l2(pwm1),
-	r1(pwm2),
-	r2(pwm3),
-	leftIO(pwm4),
-	rightIO(pwm5),
-	lift1(pwm6),
-	lift2(pwm7),
+	l1(pwm0), //PDP0
+	l2(pwm1), //PDP1
+	r1(pwm2), //PDP14
+	r2(pwm3), //PDP15
+	leftIO(pwm4), //PDP13
+	rightIO(pwm5), //PDP12
+	lift1(pwm6), //PDP2
+	lift2(pwm7), //PDP3
 	compressor(pcm0),
 	driveGearboxes(pcm0, pch0, pch1),
 	liftGearbox(pcm0, pch6, pch7),
@@ -113,7 +113,6 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
  * spark 7 and 6, one is flipped polarity
  * left stick drives right
  * left trigger opposite of right trigger
- *
  */
 {
 	leftSwitch = false;
@@ -131,7 +130,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	gl180 = false;
 	gr180 = false;
 
-	ahrs = new AHRS(SerialPort::kMXP);
+	// USE SPI AND NOT SERIALPORT
+	ahrs = new AHRS(SPI::kMXP);
 
 //	fpos = centerPos;
 	fpos = 1;
@@ -261,7 +261,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	};
 
 	cl = {{8},
-		  {2, 27, 0.65},
+		  {2, 27, 1.0},
 //		  {3, 1},
 //		  {2, 48, 0.65},
 		  {10, 1},
@@ -301,7 +301,6 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {10, 0},
 		  {3, 0}
 	};
-
 	lll = {{8},
 		   {9, 1, 260, 1.0},
 		   {10, 1},
@@ -325,6 +324,39 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		   {5, 0.5, 1.0},
 		   {2, -5, 0.5},
 		   {3, 0}
+
+//	  {8},
+//	  {9, 1, 125, 1.0},
+////		  {3, 1},
+////		  {2, 75, 1.0},
+//	  {10, 1},
+//	  {1, 60, 0.75},
+//	  {10, 0},
+//	  {2, 26, 0.75},
+//	  {5, 0.5, 1.0},
+//	  {9, 0, -26, 0.75},
+////		  {2, -5, 0.75},
+////		  {3, 0},
+//	  {10, 1},
+//	  {1, -60, 0.65},
+//	  {10, 0},
+//	  {2, 85, 0.90},
+//	  {10, 1},
+//	  {1, 60, 0.65},
+//	  {10, 0},
+//	  {2, 54, 0.65},
+//	  {10, 1},
+//	  {1, 75, 0.65},
+//	  {10, 0},
+//	  {7, 256, 384, 0.5},
+//	  {6, -1.0},
+//	  {4, 20, 0.65},
+//	  {6, 0.0},
+//	  {3, 1},
+//	  {2, 2, 0.5},
+//	  {5, 0.5, 1.0},
+//	  {2, -5, 0.5},
+//	  {3, 0}
 	};
 
 	llr = {{8},
@@ -424,6 +456,9 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	ioForward = false;
 	ioBackward = false;
 	released = true;
+	autoRaise = false;
+	raiseCounter = 0;
+	sightCounter = 0;
 
 	visionAligned = false;
 
@@ -1021,7 +1056,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 //	Gyro180L(m_left.ReadButton(11));
 //	Gyro180R(m_left.ReadButton(12));
 	ManualShiftGears(m_right.ReadButton(6), m_right.ReadButton(4));
-	ManualShiftLift(m_left.ReadButton(6), m_left.ReadButton(4));
+	ManualShiftLift(m_left.ReadButton(6) || m_handheld.ReadButton(4), m_left.ReadButton(4) || m_handheld.ReadButton(2));
 	ManualCubeIO(m_handheld.ReadButton(8), m_handheld.ReadButton(6));
 	RunLifter(m_handheld.ReadButton(5) || m_right.ReadButton(1), m_handheld.ReadButton(7) || m_left.ReadButton(1));
 //	DropOmnis(m_left.ReadButton(5), m_left.ReadButton(3));
@@ -1047,6 +1082,8 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	SmartDashboard::PutBoolean("centerPos", centerPosSwitch->Get());
 	SmartDashboard::PutBoolean("rightPos", rightPosSwitch->Get());
 	SmartDashboard::PutNumberArray("Center X", centerX);
+	SmartDashboard::PutBoolean("Auto Raise?", autoRaise);
+	SmartDashboard::PutNumber("Raise Counter", raiseCounter);
 }
 
 /*
@@ -1092,7 +1129,7 @@ void Robot::TankDrive() {
 		SetLeftSpeed(leftInput * -inputMultiplier);
 	}
 	else if (fabs(leftInput) >= 0.7) {
-		SetLeftSpeed(-leftInput);
+		SetLeftSpeed(-leftInput * 0.9);
 	}
 	else {
 		SetLeftSpeed(0.0);
@@ -1102,7 +1139,7 @@ void Robot::TankDrive() {
 		SetRightSpeed(rightInput * -inputMultiplier);
 	}
 	else if (fabs(rightInput) >= 0.7) {
-		SetRightSpeed(-rightInput);
+		SetRightSpeed(-rightInput * 0.9);
 	}
 	else {
 		SetRightSpeed(0.0);
@@ -1408,66 +1445,91 @@ void Robot::RunLifter(bool up, bool down) {
 		lastLiftState = 0;
 	}
 
-	if (!bottomSensor->Get()) {
-		if (down) {
-			lift1.Set(0.0);
-			lift2.Set(0.0);
-		}
-		else if (up) {
-			lift1.Set(upSpeed);
-			lift2.Set(upSpeed);
+	if (!bottomSensor->Get() || !autoRaise) {
+		raiseCounter = 0;
+	}
+
+	if (lidar->AquireDistance() < 15 && !bottomSensor->Get()) {
+		sightCounter++;
+		if (sightCounter >= 3) {
+			autoRaise = true;
 		}
 	}
-	else if (!switchSensor->Get() && checkSwitch) {
-		if ((up || down) && !goingPastSwitch) {
-			haltLifter = true;
-			lift1.Set(0.0);
-			lift2.Set(0.0);
-		}
+	else {
+		sightCounter = 0;
+	}
 
-		if (haltLifter && !up && !down) {
-			haltLifter = false;
-			goingPastSwitch = true;
-		}
-
-		if (!haltLifter) {
-			if (up) {
+	if (autoRaise) {
+		lift1.Set(0.75);
+		lift2.Set(0.75);
+	}
+	else {
+		if (!bottomSensor->Get()) {
+			if (down) {
+				lift1.Set(0.0);
+				lift2.Set(0.0);
+			}
+			else if (up) {
 				lift1.Set(upSpeed);
 				lift2.Set(upSpeed);
+			}
+		}
+		else if (!switchSensor->Get() && checkSwitch) {
+			if ((up || down) && !goingPastSwitch) {
+				haltLifter = true;
+				lift1.Set(0.0);
+				lift2.Set(0.0);
+			}
+
+			if (haltLifter && !up && !down) {
+				haltLifter = false;
+				goingPastSwitch = true;
+			}
+
+			if (!haltLifter) {
+				if (up) {
+					lift1.Set(upSpeed);
+					lift2.Set(upSpeed);
+				}
+				else if (down) {
+					lift1.Set(downSpeed);
+					lift2.Set(downSpeed);
+				}
+			}
+		}
+		else if (!topSensor->Get()) {
+			if (up) {
+				lift1.Set(0.0);
+				lift2.Set(0.0);
 			}
 			else if (down) {
 				lift1.Set(downSpeed);
 				lift2.Set(downSpeed);
 			}
 		}
-	}
-	else if (!topSensor->Get()) {
-		if (up) {
-			lift1.Set(0.0);
-			lift2.Set(0.0);
-		}
-		else if (down) {
-			lift1.Set(downSpeed);
-			lift2.Set(downSpeed);
-		}
-	}
-	else {
-		if (up) {
-			lift1.Set(upSpeed);
-			lift2.Set(upSpeed);
-		}
+		else {
+			if (up) {
+				lift1.Set(upSpeed);
+				lift2.Set(upSpeed);
+			}
 
-		if (down) {
-			lift1.Set(downSpeed);
-			lift2.Set(downSpeed);
+			if (down) {
+				lift1.Set(downSpeed);
+				lift2.Set(downSpeed);
+			}
 		}
+	}
+
+	if ((!switchSensor->Get() || !topSensor->Get() || raiseCounter >= 15 || up || down) && autoRaise) {
+		autoRaise = false;
+		raiseCounter = 0;
 	}
 
 	if (switchSensor->Get()) {
 		goingPastSwitch = false;
 	}
 
-	if (!up && !down) {
+	if (!up && !down && !autoRaise) {
 		lift1.Set(0.0);
 		lift2.Set(0.0);
 	}
@@ -1490,6 +1552,8 @@ void Robot::RunLifter(bool up, bool down) {
 //		lift1.Set(0.0);
 //		lift2.Set(0.0);
 //	}
+
+	raiseCounter++;
 }
 
 void Robot::CheckHallSensor() {
