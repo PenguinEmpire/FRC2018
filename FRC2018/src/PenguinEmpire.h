@@ -49,14 +49,15 @@ public:
 	Spark lift1, lift2; // Lifter motor controllers
 	AHRS *ahrs; // Purple sensor board
 	Compressor compressor;
-	DoubleSolenoid leftGearbox, rightGearbox, liftGearbox; // Gearbox shifters
-	DoubleSolenoid omniDropper;
+	DoubleSolenoid driveGearboxes, liftGearbox, omniDropper; // Gearbox shifters and omni actuator
 	Timer* mainTimer;
 	Timer* lidarTimer;
 	Lidar* lidar;
 	DigitalInput* bottomSensor;
 	DigitalInput* switchSensor;
 	DigitalInput* topSensor;
+	DigitalInput* centerPosSwitch;
+	DigitalInput* rightPosSwitch;
 	Encoder leftEnc, rightEnc;
 
 // Values and Structures
@@ -71,6 +72,7 @@ public:
 	bool turnSetup;
 	bool comboLift;
 	bool comboDrive;
+	bool autoDrop;
 
 	bool gl90, gr90, gl180, gr180;
 
@@ -105,7 +107,7 @@ public:
 //	};
 
 	std::vector<std::vector<double>> autosteps;
-	std::vector<std::vector<double>> ll, lr, cl, cr, rl, rr;
+	std::vector<std::vector<double>> lll, llr, lrl, lrr, cl, cr, rrr, rrl, rlr, rll;
 	int numsteps, curstep;
 	bool stepSetup, stepComplete;
 	int fpos;
@@ -114,6 +116,14 @@ public:
 	int lastLiftState;
 	bool haltLifter;
 	bool goingPastSwitch;
+	bool checkSwitch;
+	bool ioForward, ioBackward;
+	bool released;
+	bool autoRaise;
+	long raiseCounter;
+	int sightCounter;
+
+	bool visionAligned;
 
 	std::shared_ptr<NetworkTable> contour;
 	std::vector<double> centerX, centerY, area, width;
@@ -153,6 +163,8 @@ public:
 	void ManualCubeIO(bool inBtn, bool outBtn);
 	void DropOmnis(bool dropBtn, bool raiseBtn);
 	void HoldOmnis(bool btn);
+	void ToggleSwitchSensor(bool on, bool off);
+	void ManualVision(bool btn);
 
 	// Test
 	void TestInit();
@@ -164,6 +176,7 @@ public:
 	void RunCubeIO(Direction dir);
 	void RunLifter(bool up, bool down);
 	void CheckHallSensor();
+	void ToggleIO(bool forward, bool backward);
 
 };
 
