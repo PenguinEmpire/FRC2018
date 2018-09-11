@@ -2,7 +2,7 @@
  * Robot.cpp
  * Created 2018-01-07
  *
- * Last Update: 2018-01-20
+ * Last Update: 2018-07-30
  */
 
 #include "PenguinEmpire.h"
@@ -431,12 +431,14 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	comboDrive = false;
 	autoDrop = false;
 
-	l1.SetExpiration(0.1);
-	l2.SetExpiration(0.1);
-	r1.SetExpiration(0.1);
-	r2.SetExpiration(0.1);
-	lift1.SetExpiration(0.1);
-	lift2.SetExpiration(0.1);
+
+	//  b/c move to Talons  //
+//	l1.SetExpiration(0.1);
+//	l2.SetExpiration(0.1);
+//	r1.SetExpiration(0.1);
+//	r2.SetExpiration(0.1);
+//	lift1.SetExpiration(0.1);
+//	lift2.SetExpiration(0.1);
 
 	mainTimer = new Timer();
 	bottomSensor = new DigitalInput(dio7);
@@ -492,6 +494,15 @@ void Robot::RobotInit() { // Runs only when robot code starts initially
 	lift1.SetInverted(false);
 	lift2.SetInverted(false);
 
+	l1.SetNeutralMode(NeutralMode::Coast);
+	l2.SetNeutralMode(NeutralMode::Coast);
+	r1.SetNeutralMode(NeutralMode::Coast);
+	r2.SetNeutralMode(NeutralMode::Coast);
+	leftIO.SetNeutralMode(NeutralMode::Coast);
+	rightIO.SetNeutralMode(NeutralMode::Coast);
+	lift1.SetNeutralMode(NeutralMode::Coast);
+	lift2.SetNeutralMode(NeutralMode::Coast);
+
 	compressorEnabled = compressor.Enabled();
 	pressureStatus = compressor.GetPressureSwitchValue();
 	current = compressor.GetCompressorCurrent();
@@ -501,6 +512,10 @@ void Robot::RobotInit() { // Runs only when robot code starts initially
 	lidarTimer->Start();
 	mainTimer->Reset();
 	lidarTimer->Reset();
+}
+
+void Robot::SetTalon(TalonSRX* talon, double speed) {
+	talon->Set(ControlMode::PercentOutput, speed);
 }
 
 void Robot::AutonomousInit() { // Runs at start of autonomous phase, only once
@@ -603,7 +618,7 @@ void Robot::AutonomousPeriodic() { // Looped through iteratively during autonomo
 	SmartDashboard::PutNumber("Left Encoder", leftEnc.GetDistance());
 	SmartDashboard::PutNumber("Right Encoder", rightEnc.GetDistance());
 	SmartDashboard::PutNumber("Average Distance", (rightEnc.GetDistance() - leftEnc.GetDistance()) / 2);
-	SmartDashboard::PutNumber("Yaw", ahrs->GetYaw());
+	//SmartDashboard::PutNumber("Yaw", ahrs->GetYaw());
 	centerX = contour->GetNumberArray("centerX", llvm::ArrayRef<double>());
 	centerY = contour->GetNumberArray("centerY", llvm::ArrayRef<double>());
 	area = contour->GetNumberArray("area", llvm::ArrayRef<double>());
@@ -681,16 +696,16 @@ void Robot::RunSteps() {
 				}
 				else {
 					if (mainTimer->Get() < 1) {
-						lift1.Set(1.0);
-						lift2.Set(1.0);
+						SetTalon(&lift1, 1.0);
+						SetTalon(&lift2, 1.0);
 					}
 					else if (mainTimer->Get() >= 1 && mainTimer->Get() < 1.5) {
-						lift1.Set(-1.0);
-						lift2.Set(-1.0);
+						SetTalon(&lift1, -1.0);
+						SetTalon(&lift2, -1.0);
 					}
 					else {
-						lift1.Set(0.0);
-						lift2.Set(0.0);
+						SetTalon(&lift1, 0.0);
+						SetTalon(&lift2, 0.0);
 						stepComplete = true;
 					}
 				}
@@ -807,14 +822,14 @@ void Robot::RunSteps() {
 				}
 				else {
 					if (mainTimer->Get() < step[1]) {
-						leftIO.Set(step[2]);
-						rightIO.Set(step[2]);
+						SetTalon(&leftIO, step[2]); //leftIO.Set(step[2]);
+						SetTalon(&rightIO, step[2]); //rightIO.Set(step[2]);
 					}
 					else {
 						ResetAll();
 						StopMotors();
-						leftIO.Set(0.0);
-						rightIO.Set(0.0);
+						SetTalon(&leftIO, 0.0);
+						SetTalon(&rightIO, 0.0);
 						stepComplete = true;
 					}
 				}
@@ -826,8 +841,8 @@ void Robot::RunSteps() {
 					stepSetup = false;
 				}
 				else {
-					leftIO.Set(step[1]);
-					rightIO.Set(step[1]);
+					SetTalon(&leftIO, step[1]);
+					SetTalon(&rightIO, step[1]);
 					stepComplete = true;
 				}
 			}
@@ -870,8 +885,8 @@ void Robot::RunSteps() {
 				if (stepSetup) {
 					ResetAll();
 					StopMotors();
-					lift1.Set(0.0);
-					lift2.Set(0.0);
+					SetTalon(&lift1, 0.0);
+					SetTalon(&lift2, 0.0);
 					stepSetup = false;
 				}
 				else {
@@ -881,8 +896,8 @@ void Robot::RunSteps() {
 						case 0:
 							AutoRunLifter(false, true);
 							if (!bottomSensor->Get()) {
-								lift1.Set(0.0);
-								lift2.Set(0.0);
+								SetTalon(&lift1, 0.0);
+								SetTalon(&lift2, 0.0);
 								comboLift = true;
 							}
 							break;
@@ -895,16 +910,16 @@ void Robot::RunSteps() {
 							}
 
 							if (!switchSensor->Get()) {
-								lift1.Set(0.0);
-								lift2.Set(0.0);
+								SetTalon(&lift1, 0.0);
+								SetTalon(&lift2, 0.0);
 								comboLift = true;
 							}
 							break;
 						case 2:
 							AutoRunLifter(true, false);
 							if (!topSensor->Get()) {
-								lift1.Set(0.0);
-								lift2.Set(0.0);
+								SetTalon(&lift1, 0.0);
+								SetTalon(&lift2, 0.0);
 								comboLift = true;
 							}
 						}
@@ -957,18 +972,18 @@ void Robot::RunSteps() {
 				if (stepSetup) {
 					ResetAll();
 					StopMotors();
-					leftIO.Set(0.0);
-					rightIO.Set(0.0);
+					SetTalon(&leftIO, 0.0);
+					SetTalon(&rightIO, 0.0);
 					stepSetup = false;
 				}
 				else {
 					if (dist > step[1]) {
-						leftIO.Set(step[2]);
-						rightIO.Set(step[2]);
+						SetTalon(&leftIO, step[2]);
+						SetTalon(&rightIO, step[2]);
 					}
 					else {
-						leftIO.Set(0.0);
-						rightIO.Set(0.0);
+						SetTalon(&leftIO, 0.0);
+						SetTalon(&rightIO, 0.0);
 					}
 				}
 			}
@@ -1014,22 +1029,22 @@ void Robot::ResetAll() {
 void Robot::StopMotors() {
 	SetLeftSpeed(0.0);
 	SetRightSpeed(0.0);
-	lift1.Set(0.0);
-	lift2.Set(0.0);
+	SetTalon(&lift1, 0.0);
+	SetTalon(&lift2, 0.0);
 }
 
 void Robot::AutoRunLifter(bool up, bool down) {
 	if (up && !down) {
-		lift1.Set(1.0);
-		lift2.Set(1.0);
+		SetTalon(&lift1, 1.0);
+		SetTalon(&lift2, 1.0);
 	}
 	else if (!up && down) {
-		lift1.Set(-1.0);
-		lift2.Set(-1.0);
+		SetTalon(&lift1, -1.0);
+		SetTalon(&lift2, -1.0);
 	}
 	else if (!up && !down) {
-		lift1.Set(0.0);
-		lift2.Set(0.0);
+		SetTalon(&lift1, 0.0);
+		SetTalon(&lift2, 0.0);
 	}
 }
 
@@ -1098,13 +1113,13 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
  */
 
 void Robot::SetLeftSpeed(double speed) {
-	l1.Set(speed);
-	l2.Set(speed);
+	SetTalon(&l1, speed);
+	SetTalon(&l2, speed);
 }
 
 void Robot::SetRightSpeed(double speed) {
-	r1.Set(speed);
-	r2.Set(speed);
+	SetTalon(&r1, speed);
+	SetTalon(&r2, speed);
 }
 
 void Robot::StopDriveMotors() {
@@ -1284,16 +1299,16 @@ void Robot::ManualCubeIO(bool in, bool out) {
 	float outSpeed = 1.0;
 
 	if (in && !out) {
-		leftIO.Set(inSpeedL);
-		rightIO.Set(inSpeedR);
+		SetTalon(&leftIO, inSpeedL);
+		SetTalon(&rightIO, inSpeedR);
 	}
 	else if (!in && out) {
-		leftIO.Set(outSpeed);
-		rightIO.Set(outSpeed);
+		SetTalon(&leftIO, outSpeed);
+		SetTalon(&rightIO, outSpeed);
 	}
 	else if (!in && !out && !ioForward && !ioBackward) {
-		leftIO.Set(0.0);
-		rightIO.Set(0.0);
+		SetTalon(&leftIO, 0.0);
+		SetTalon(&rightIO, 0.0);
 	}
 }
 
@@ -1348,14 +1363,14 @@ void Robot::ManualVision(bool btn) {
 
 		if (visionAligned) {
 			if (lidar->AquireDistance() > 25) {
-				leftIO.Set(-1.0);
-				rightIO.Set(-1.0);
+				SetTalon(&leftIO, -1.0);
+				SetTalon(&rightIO, -1.0);
 				SetLeftSpeed(0.65);
 				SetRightSpeed(0.65);
 			}
 			else {
-				leftIO.Set(0.0);
-				rightIO.Set(0.0);
+				SetTalon(&leftIO, 0.0);
+				SetTalon(&rightIO, 0.0);
 				SetLeftSpeed(0.0);
 				SetRightSpeed(0.0);
 			}
@@ -1421,13 +1436,13 @@ void Robot::RunCubeIO(Direction dir) {
 	 */
 	if (dir == forward) {
 		SmartDashboard::PutString("IO Direction", "Out");
-		leftIO.Set(0.65);
-		rightIO.Set(0.65);
+		SetTalon(&leftIO, 0.65);
+		SetTalon(&rightIO, 0.65);
 	}
 	else if (dir == backward) {
 		SmartDashboard::PutString("IO Direction", "In");
-		leftIO.Set(-0.65);
-		rightIO.Set(-0.65);
+		SetTalon(&leftIO, -0.65);
+		SetTalon(&rightIO, -0.65);
 	}
 }
 
@@ -1460,25 +1475,25 @@ void Robot::RunLifter(bool up, bool down) {
 	}
 
 	if (autoRaise) {
-		lift1.Set(0.75);
-		lift2.Set(0.75);
+		SetTalon(&lift1, 0.75);
+		SetTalon(&lift2, 0.75);
 	}
 	else {
 		if (!bottomSensor->Get()) {
 			if (down) {
-				lift1.Set(0.0);
-				lift2.Set(0.0);
+				SetTalon(&lift1, 0.0);
+				SetTalon(&lift2, 0.0);
 			}
 			else if (up) {
-				lift1.Set(upSpeed);
-				lift2.Set(upSpeed);
+				SetTalon(&lift1, upSpeed);
+				SetTalon(&lift2, upSpeed);
 			}
 		}
 		else if (!switchSensor->Get() && checkSwitch) {
 			if ((up || down) && !goingPastSwitch) {
 				haltLifter = true;
-				lift1.Set(0.0);
-				lift2.Set(0.0);
+				SetTalon(&lift1, 0.0);
+				SetTalon(&lift2, 0.0);
 			}
 
 			if (haltLifter && !up && !down) {
@@ -1488,34 +1503,34 @@ void Robot::RunLifter(bool up, bool down) {
 
 			if (!haltLifter) {
 				if (up) {
-					lift1.Set(upSpeed);
-					lift2.Set(upSpeed);
+					SetTalon(&lift1, upSpeed);
+					SetTalon(&lift2, upSpeed);
 				}
 				else if (down) {
-					lift1.Set(downSpeed);
-					lift2.Set(downSpeed);
+					SetTalon(&lift1, downSpeed);
+					SetTalon(&lift2, downSpeed);
 				}
 			}
 		}
 		else if (!topSensor->Get()) {
 			if (up) {
-				lift1.Set(0.0);
-				lift2.Set(0.0);
+				SetTalon(&lift1, 0.0);
+				SetTalon(&lift2, 0.0);
 			}
 			else if (down) {
-				lift1.Set(downSpeed);
-				lift2.Set(downSpeed);
+				SetTalon(&lift1, downSpeed);
+				SetTalon(&lift2, downSpeed);
 			}
 		}
 		else {
 			if (up) {
-				lift1.Set(upSpeed);
-				lift2.Set(upSpeed);
+				SetTalon(&lift1, upSpeed);
+				SetTalon(&lift2, upSpeed);
 			}
 
 			if (down) {
-				lift1.Set(downSpeed);
-				lift2.Set(downSpeed);
+				SetTalon(&lift1, downSpeed);
+				SetTalon(&lift2, downSpeed);
 			}
 		}
 	}
@@ -1530,8 +1545,8 @@ void Robot::RunLifter(bool up, bool down) {
 	}
 
 	if (!up && !down && !autoRaise) {
-		lift1.Set(0.0);
-		lift2.Set(0.0);
+		SetTalon(&lift1, 0.0);
+		SetTalon(&lift2, 0.0);
 	}
 
 //	if (topSensor->Get()) {
@@ -1582,12 +1597,12 @@ void Robot::ToggleIO(bool forward, bool backward) {
 	}
 
 	if (ioForward) {
-		leftIO.Set(1.0);
-		rightIO.Set(1.0);
+		SetTalon(&leftIO, 1.0);
+		SetTalon(&rightIO, 1.0);
 	}
 	else if (ioBackward) {
-		leftIO.Set(1.0);
-		rightIO.Set(1.0);
+		SetTalon(&leftIO, 1.0);
+		SetTalon(&rightIO, 1.0);
 	}
 }
 //Robot::Step::Step(Robot* r , StepType steptype, std::vector<double> parameters) : robot(r) {

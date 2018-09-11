@@ -12,6 +12,7 @@
 #include "WPILib.h"
 #include "MyJoystick.h"
 #include "AHRS.h"
+#include "ctre/Phoenix.h"
 
 class Lidar {
 public:
@@ -44,9 +45,9 @@ public:
 // Components and Systems
 	Joystick leftStick, rightStick, handheld; // Joysticks
 	MyJoystick m_left, m_right, m_handheld; // Button reading for Joysticks
-	Spark l1, l2, r1, r2; // Drive motor controllers
-	Spark leftIO, rightIO; // IO motor controllers
-	Spark lift1, lift2; // Lifter motor controllers
+	TalonSRX l1, l2, r1, r2; // Drive motor controllers
+	TalonSRX leftIO, rightIO; // IO motor controllers
+	TalonSRX lift1, lift2; // Lifter motor controllers
 	AHRS *ahrs; // Purple sensor board
 	Compressor compressor;
 	DoubleSolenoid driveGearboxes, liftGearbox, omniDropper; // Gearbox shifters and omni actuator
@@ -136,6 +137,9 @@ public:
 	Robot();
 	~Robot();
 	void RobotInit();
+
+	//Talon QOL
+	void SetTalon(TalonSRX* talon, double speed);
 
 	// Autonomous
 	void AutonomousInit();
