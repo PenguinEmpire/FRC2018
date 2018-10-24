@@ -165,6 +165,7 @@ public:
 	void HoldOmnis(bool btn);
 	void ToggleSwitchSensor(bool on, bool off);
 	void ManualVision(bool btn);
+	void QuitVision(bool btn);
 
 	// Test
 	void TestInit();

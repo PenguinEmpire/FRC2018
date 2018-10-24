@@ -472,6 +472,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	area = {0};
 	width = {0};
 
+	contour->PutNumber("Quit", 0);
 }
 
 Robot::~Robot() { // Robot destructor - Delete pointer values here
@@ -1063,8 +1064,9 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	HoldOmnis(m_right.ReadButton(2));
 	ToggleSwitchSensor(m_handheld.ReadButton(1), m_handheld.ReadButton(3));
 	CheckHallSensor();
-	ToggleIO(m_handheld.ReadButton(9), m_handheld.ReadButton(10));
-	ManualVision(m_left.ReadButton(2));
+//	ToggleIO(m_handheld.ReadButton(9), m_handheld.ReadButton(10));
+	ManualVision(m_left.ReadButton(2) || m_handheld.ReadButton(9));
+	QuitVision(m_handheld.ReadButton(10));
 
 	centerX = contour->GetNumberArray("centerX", llvm::ArrayRef<double>());
 
@@ -1360,6 +1362,13 @@ void Robot::ManualVision(bool btn) {
 				SetRightSpeed(0.0);
 			}
 		}
+		contour->PutNumber("Quit", 0);
+	}
+}
+
+void Robot::QuitVision(bool btn) {
+	if (btn) {
+		contour->PutNumber("Quit", 1);
 	}
 }
 
