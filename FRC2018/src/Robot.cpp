@@ -2,7 +2,7 @@
  * Robot.cpp
  * Created 2018-01-07
  *
- * Last Update: 2018-01-20
+ * Last Update: 2018-10-24
  */
 
 #include "PenguinEmpire.h"
@@ -1329,14 +1329,16 @@ void Robot::ToggleSwitchSensor(bool on, bool off) {
 }
 
 void Robot::ManualVision(bool btn) {
+	//Resolution of Camera is (672, 376) in VGA mode
+	//Genius Noah split into fifths. 2/5 left 1/5 aligned 2/5 right
 	if (btn) {
 		if (centerX.size() > 0) {
-			if (centerX[0] < 256) {
+			if (centerX[0] < 150) {
 				SetLeftSpeed(-0.5);
 				SetRightSpeed(0.5);
 				visionAligned = false;
 			}
-			else if (centerX[0] > 384) {
+			else if (centerX[0] > 225) {
 				SetLeftSpeed(0.5);
 				SetRightSpeed(-0.5);
 				visionAligned = false;
