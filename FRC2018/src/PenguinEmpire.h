@@ -2,7 +2,7 @@
  * PenguinEmpire.h
  * Created 2018-01-07
  *
- * Last update: 2018-01-20
+ * Last update: 2018-10-24
  */
 
 #ifndef SRC_PENGUINEMPIRE_H_
@@ -165,6 +165,7 @@ public:
 	void HoldOmnis(bool btn);
 	void ToggleSwitchSensor(bool on, bool off);
 	void ManualVision(bool btn);
+	void QuitVision(bool btn);
 
 	// Test
 	void TestInit();

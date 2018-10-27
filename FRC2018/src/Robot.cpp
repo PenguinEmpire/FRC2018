@@ -2,7 +2,7 @@
  * Robot.cpp
  * Created 2018-01-07
  *
- * Last Update: 2018-01-20
+ * Last Update: 2018-10-24
  */
 
 #include "PenguinEmpire.h"
@@ -169,7 +169,14 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		 * 5: IO Timed
 		 * 6: IO Set
 		 * 7: Auto Aim
-		 * 99: Loop all previous steps
+		 * 8: Shift drive gears down
+		 * 9: Combination lift & move		{9, stage, dist, speed}
+		 * 10: Set omni wheels				{10, set}
+		 * 11: Shift lift
+		 *
+		 * 97: IO Hold						{97, max dist, speed (eject from IO speed)}		UNUSED
+		 * 98: Loop all steps																UNUSED
+		 * 99: Go to specified step (changes curstep) {99, wanted step number as index}		UNUSED
 		 */
 
 	rrr = {{8},
@@ -188,7 +195,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		   {1, -75, 0.75},
 		   {10, 0},
 		   {2, 24, 0.65},
-		   {7, 256, 384, 0.5},
+		   // {7, 256, 384, 0.5},
+		   {7, 150, 225, .5},
 		   {6, -1.0},
 		   {4, 20, 0.65},
 		   {6, 0.0},
@@ -222,7 +230,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {10, 1},
 		  {1, -75, 0.65},
 		  {10, 0},
-		  {7, 256, 384, 0.5},
+		  //{7, 256, 384, 0.5},
+		  {7, 150, 225, 0.5},
 		  {6, -1.0},
 		  {4, 20, 0.65},
 		  {6, 0.0},
@@ -248,7 +257,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		   {10, 1},
 		   {1, -150, 0.75},
 		   {10, 0},
-		   {7, 256, 384, 0.5}
+		   {7, 150, 225, 0.5} // changed!
 	};
 
 	rll = {{8},
@@ -315,7 +324,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		   {10, 1},
 		   {1, 75, 0.75},
 		   {10, 0},
-		   {7, 256, 384, 0.5},
+		   {7, 150, 225, 0.5}, //changed!
 		   {6, -1.0},
 		   {4, 20, 0.65},
 		   {6, 0.0},
@@ -348,7 +357,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 //	  {10, 1},
 //	  {1, 75, 0.65},
 //	  {10, 0},
-//	  {7, 256, 384, 0.5},
+//	  {7, 150, 225, 0.5}, //changed!
 //	  {6, -1.0},
 //	  {4, 20, 0.65},
 //	  {6, 0.0},
@@ -382,7 +391,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {10, 1},
 		  {1, 75, 0.65},
 		  {10, 0},
-		  {7, 256, 384, 0.5},
+		  {7, 150, 225, 0.5}, // changed!
 		  {6, -1.0},
 		  {4, 20, 0.65},
 		  {6, 0.0},
@@ -408,7 +417,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		   {10, 1},
 		   {1, 150, 0.75},
 		   {10, 0},
-		   {7, 256, 384, 0.5}
+		   {7, 150, 225, 0.5} //chagned!
 	};
 
 	lrr = {{8},
@@ -472,6 +481,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	area = {0};
 	width = {0};
 
+	contour->PutNumber("Quit", 0);
 }
 
 Robot::~Robot() { // Robot destructor - Delete pointer values here
@@ -988,7 +998,7 @@ void Robot::RunSteps() {
 					StopMotors();
 				}
 				else {
-					curstep = step[1] - 1;
+					curstep = step[1]; //step[1] - 1; | CHANGED - Noah lied
 					stepComplete = true;
 				}
 			}
@@ -1063,8 +1073,9 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	HoldOmnis(m_right.ReadButton(2));
 	ToggleSwitchSensor(m_handheld.ReadButton(1), m_handheld.ReadButton(3));
 	CheckHallSensor();
-	ToggleIO(m_handheld.ReadButton(9), m_handheld.ReadButton(10));
-	ManualVision(m_left.ReadButton(2));
+//	ToggleIO(m_handheld.ReadButton(9), m_handheld.ReadButton(10));
+	ManualVision(m_left.ReadButton(2) || m_handheld.ReadButton(9));
+	QuitVision(m_handheld.ReadButton(10));
 
 	centerX = contour->GetNumberArray("centerX", llvm::ArrayRef<double>());
 
@@ -1327,14 +1338,16 @@ void Robot::ToggleSwitchSensor(bool on, bool off) {
 }
 
 void Robot::ManualVision(bool btn) {
+	//Resolution of Camera is (672, 376) in VGA mode
+	//Genius Noah split into fifths. 2/5 left 1/5 aligned 2/5 right
 	if (btn) {
 		if (centerX.size() > 0) {
-			if (centerX[0] < 256) {
+			if (centerX[0] < 150) {
 				SetLeftSpeed(-0.5);
 				SetRightSpeed(0.5);
 				visionAligned = false;
 			}
-			else if (centerX[0] > 384) {
+			else if (centerX[0] > 225) {
 				SetLeftSpeed(0.5);
 				SetRightSpeed(-0.5);
 				visionAligned = false;
@@ -1360,6 +1373,13 @@ void Robot::ManualVision(bool btn) {
 				SetRightSpeed(0.0);
 			}
 		}
+		contour->PutNumber("Quit", 0);
+	}
+}
+
+void Robot::QuitVision(bool btn) {
+	if (btn) {
+		contour->PutNumber("Quit", 1);
 	}
 }
 
