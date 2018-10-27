@@ -169,7 +169,14 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		 * 5: IO Timed
 		 * 6: IO Set
 		 * 7: Auto Aim
-		 * 99: Loop all previous steps
+		 * 8: Shift drive gears down
+		 * 9: Combination lift & move		{9, stage, dist, speed}
+		 * 10: Set omni wheels				{10, set}
+		 * 11: Shift lift
+		 *
+		 * 97: IO Hold						{97, max dist, speed (eject from IO speed)}		UNUSED
+		 * 98: Loop all steps																UNUSED
+		 * 99: Go to specified step (changes curstep) {99, wanted step number as index}		UNUSED
 		 */
 
 	rrr = {{8},
@@ -991,7 +998,7 @@ void Robot::RunSteps() {
 					StopMotors();
 				}
 				else {
-					curstep = step[1] - 1;
+					curstep = step[1]; //step[1] - 1; | CHANGED - Noah lied
 					stepComplete = true;
 				}
 			}
