@@ -622,9 +622,9 @@ void Robot::AutonomousPeriodic() { // Looped through iteratively during autonomo
 	width = contour->GetNumberArray("width", llvm::ArrayRef<double>());
 
 	dist = lidar->AquireDistance();
-	//RunSteps();
-	SetLeftSpeed(.8);
-	SetRightSpeed(.8);
+	RunSteps();
+	//SetLeftSpeed(.8);
+	//SetRightSpeed(.8);
 }
 
 /*
