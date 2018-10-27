@@ -736,7 +736,7 @@ void Robot::RunSteps() {
 				}
 			}
 			else if (step[0] == 2) { // Encoder Move {2, distance, speed}
-				double tiltCorrectionFactor = 0.1;
+				double tiltCorrectionFactor = 0.15;
 				int acceptableDrift = 5;
 				if (stepSetup) {
 					ResetAll();
