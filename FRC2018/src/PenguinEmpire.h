@@ -132,8 +132,8 @@ public:
 
 	int dist;
 
-	int leftXVision;
-	int rightXVision;
+	double leftXVision;
+	double rightXVision;
 
 // Stages
 

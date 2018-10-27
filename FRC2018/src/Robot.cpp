@@ -272,7 +272,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	};
 
 	cl = {{8},
-		  {2, 27, 1.0},
+		  {2, 27 , 1.0},
 //		  {3, 1},
 //		  {2, 48, 0.65},
 		  {10, 1},
@@ -755,12 +755,15 @@ void Robot::RunSteps() {
 					double avgEnc = (rightEnc.GetDistance() - leftEnc.GetDistance()) / 2;
 					if (step[1] > 0 && avgEnc < step[1]) {
 						if (ahrs->GetYaw() < startYaw - acceptableDrift) {
+							SmartDashboard::PutBoolean("Correcting drift", true);
 							SetLeftSpeed(step[2] + tiltCorrectionFactor);
 							SetRightSpeed(step[2] - tiltCorrectionFactor);
 						} else if (ahrs->GetYaw() > startYaw + acceptableDrift) {
+							SmartDashboard::PutBoolean("Correcting drift", true);
 							SetLeftSpeed(step[2] - tiltCorrectionFactor);
 							SetRightSpeed(step[2] + tiltCorrectionFactor);
 						} else {
+							SmartDashboard::PutBoolean("Correcting drift", false);
 							SetLeftSpeed(step[2]);
 							SetRightSpeed(step[2]);
 						}
