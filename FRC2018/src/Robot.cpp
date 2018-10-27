@@ -179,33 +179,33 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		 * 99: Go to specified step (changes curstep) {99, wanted step number as index}		UNUSED
 		 */
 
-	rrr = {{8},
-		   {9, 1, 260, 1.0},
-		   {10, 1},
-		   {1, -40, 0.5},
-		   {10, 0},
-		   {3, 2},
-		   {2, 24, 0.5},
-		   {5, 0.5, 1.0},
-		   {2, -10, 0.5},
-		   {11, 1},
-		   {9, 0, -14, 0.5},
-		   {11, 0},
-		   {10, 1},
-		   {1, -75, 0.75},
-		   {10, 0},
-		   {2, 24, 0.65},
-		   // {7, 256, 384, 0.5},
-		   {7, 150, 225, .5},
-		   {6, -1.0},
-		   {4, 20, 0.65},
-		   {6, 0.0},
-		   {3, 1},
-		   {2, 2, 0.5},
-		   {5, 0.5, 1.0},
-		   {2, -5, 0.5},
-		   {3, 0}
-	};
+//	rrr = {{8},
+//		   {9, 1, 260, 1.0},
+//		   {10, 1},
+//		   {1, -40, 0.5},
+//		   {10, 0},
+//		   {3, 2},
+//		   {2, 24, 0.5},
+//		   {5, 0.5, 1.0},
+//		   {2, -10, 0.5},
+//		   {11, 1},
+//		   {9, 0, -14, 0.5},
+//		   {11, 0},
+//		   {10, 1},
+//		   {1, -75, 0.75},
+//		   {10, 0},
+//		   {2, 24, 0.65},
+//		   // {7, 256, 384, 0.5},
+//		   {7, leftXVision, rightXVision, .5},
+//		   {6, -1.0},
+//		   {4, 20, 0.65},
+//		   {6, 0.0},
+//		   {3, 1},
+//		   {2, 2, 0.5},
+//		   {5, 0.5, 1.0},
+//		   {2, -5, 0.5},
+//		   {3, 0}
+//	};
 
 	rrl = {{8},
 		  {9, 1, 125, 1.0},
@@ -231,7 +231,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {1, -75, 0.65},
 		  {10, 0},
 		  //{7, 256, 384, 0.5},
-		  {7, 150, 225, 0.5},
+		  {7, leftXVision, rightXVision, 0.5},
 		  {6, -1.0},
 		  {4, 20, 0.65},
 		  {6, 0.0},
@@ -241,6 +241,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {2, -5, 0.5},
 		  {3, 0}
 	};
+
+	rrr = rrl;
 
 	rlr = {{8},
 		   {9, 1, 260, 1.0},
@@ -257,7 +259,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		   {10, 1},
 		   {1, -150, 0.75},
 		   {10, 0},
-		   {7, 150, 225, 0.5} // changed!
+		   {7, leftXVision, rightXVision, 0.5} // changed!
 	};
 
 	rll = {{8},
@@ -310,29 +312,29 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {10, 0},
 		  {3, 0}
 	};
-	lll = {{8},
-		   {9, 1, 260, 1.0},
-		   {10, 1},
-		   {1, 40, 0.5},
-		   {10, 0},
-		   {2, 24, 0.5},
-		   {5, 0.5, 1.0},
-		   {2, -10, 0.5},
-		   {11, 1},
-		   {9, 0, -14, 0.5},
-		   {11, 0},
-		   {10, 1},
-		   {1, 75, 0.75},
-		   {10, 0},
-		   {7, 150, 225, 0.5}, //changed!
-		   {6, -1.0},
-		   {4, 20, 0.65},
-		   {6, 0.0},
-		   {3, 1},
-		   {2, 2, 0.5},
-		   {5, 0.5, 1.0},
-		   {2, -5, 0.5},
-		   {3, 0}
+//	lll = {{8},
+//		   {9, 1, 260, 1.0},
+//		   {10, 1},
+//		   {1, 40, 0.5},
+//		   {10, 0},
+//		   {2, 24, 0.5},
+//		   {5, 0.5, 1.0},
+//		   {2, -10, 0.5},
+//		   {11, 1},
+//		   {9, 0, -14, 0.5},
+//		   {11, 0},
+//		   {10, 1},
+//		   {1, 75, 0.75},
+//		   {10, 0},
+//		   {7, leftXVision, rightXVision, 0.5}, //changed!
+//		   {6, -1.0},
+//		   {4, 20, 0.65},
+//		   {6, 0.0},
+//		   {3, 1},
+//		   {2, 2, 0.5},
+//		   {5, 0.5, 1.0},
+//		   {2, -5, 0.5},
+//		   {3, 0}
 
 //	  {8},
 //	  {9, 1, 125, 1.0},
@@ -357,7 +359,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 //	  {10, 1},
 //	  {1, 75, 0.65},
 //	  {10, 0},
-//	  {7, 150, 225, 0.5}, //changed!
+//	  {7, leftXVision, rightXVision, 0.5}, //changed!
 //	  {6, -1.0},
 //	  {4, 20, 0.65},
 //	  {6, 0.0},
@@ -366,7 +368,9 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 //	  {5, 0.5, 1.0},
 //	  {2, -5, 0.5},
 //	  {3, 0}
-	};
+
+
+//};
 
 	llr = {{8},
 		  {9, 1, 125, 1.0},
@@ -391,7 +395,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {10, 1},
 		  {1, 75, 0.65},
 		  {10, 0},
-		  {7, 150, 225, 0.5}, // changed!
+		  {7, leftXVision, rightXVision, 0.5}, // changed!
 		  {6, -1.0},
 		  {4, 20, 0.65},
 		  {6, 0.0},
@@ -401,6 +405,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		  {2, -5, 0.5},
 		  {3, 0}
 	};
+
+	lll = llr;
 
 	lrl = {{8},
 		   {9, 1, 260, 1.0},
@@ -417,7 +423,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 		   {10, 1},
 		   {1, 150, 0.75},
 		   {10, 0},
-		   {7, 150, 225, 0.5} //chagned!
+		   {7, leftXVision, rightXVision, 0.5} //chagned!
 	};
 
 	lrr = {{8},
@@ -440,6 +446,8 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	comboDrive = false;
 	autoDrop = false;
 	startYaw = 0.0;
+	leftXVision = 268;
+	rightXVision = 402;
 
 	l1.SetExpiration(0.1);
 	l2.SetExpiration(0.1);
@@ -625,8 +633,8 @@ void Robot::AutonomousPeriodic() { // Looped through iteratively during autonomo
 
 	dist = lidar->AquireDistance();
 	RunSteps();
-	//SetLeftSpeed(.8);
-	//SetRightSpeed(.8);
+	//SetLeftSpeed(.7);
+	//SetRightSpeed(.7);
 }
 
 /*
@@ -1114,6 +1122,7 @@ void Robot::TeleopPeriodic() { // Looped through iteratively during teleoperated
 	SmartDashboard::PutNumberArray("Center X", centerX);
 	SmartDashboard::PutBoolean("Auto Raise?", autoRaise);
 	SmartDashboard::PutNumber("Raise Counter", raiseCounter);
+	SmartDashboard::PutNumber("CheckPos", CheckPos());
 }
 
 /*
@@ -1361,12 +1370,12 @@ void Robot::ManualVision(bool btn) {
 	//Genius Noah split into fifths. 2/5 left 1/5 aligned 2/5 right
 	if (btn) {
 		if (centerX.size() > 0) {
-			if (centerX[0] < 150) {
+			if (centerX[0] < leftXVision) {
 				SetLeftSpeed(-0.5);
 				SetRightSpeed(0.5);
 				visionAligned = false;
 			}
-			else if (centerX[0] > 225) {
+			else if (centerX[0] > rightXVision) {
 				SetLeftSpeed(0.5);
 				SetRightSpeed(-0.5);
 				visionAligned = false;
