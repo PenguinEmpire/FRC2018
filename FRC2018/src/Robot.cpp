@@ -448,7 +448,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	lift2.SetExpiration(0.1);
 
 	mainTimer = new Timer();
-	bottomSensor = new DigitalInput(dio7);
+	bottomSensor = new DigitalInput(dio6);
 	switchSensor = new DigitalInput(dio8);
 	topSensor = new DigitalInput(dio9);
 	centerPosSwitch = new DigitalInput(dio4);
@@ -563,6 +563,8 @@ void Robot::AutonomousInit() { // Runs at start of autonomous phase, only once
 		mode = "rrr";
 	}
 
+	//autosteps = rf;
+
 	//Auto Aim Params: minX = 256, maxX = 384
 	/*
 	 * 1: Gyro Turn
@@ -620,7 +622,9 @@ void Robot::AutonomousPeriodic() { // Looped through iteratively during autonomo
 	width = contour->GetNumberArray("width", llvm::ArrayRef<double>());
 
 	dist = lidar->AquireDistance();
-	RunSteps();
+	//RunSteps();
+	SetLeftSpeed(.8);
+	SetRightSpeed(.8);
 }
 
 /*
