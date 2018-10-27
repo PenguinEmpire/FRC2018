@@ -439,6 +439,7 @@ Robot::Robot() : // Robot constructor - Initialize all subsystem and component c
 	comboLift = false;
 	comboDrive = false;
 	autoDrop = false;
+	startYaw = 0.0;
 
 	l1.SetExpiration(0.1);
 	l2.SetExpiration(0.1);
@@ -497,8 +498,8 @@ void Robot::RobotInit() { // Runs only when robot code starts initially
 	l2.SetInverted(false);
 	r1.SetInverted(true);
 	r2.SetInverted(true);
-	leftIO.SetInverted(true);
-	rightIO.SetInverted(false);
+	leftIO.SetInverted(false); //used to be opposite
+	rightIO.SetInverted(true); // ||
 	lift1.SetInverted(false);
 	lift2.SetInverted(false);
 
@@ -519,6 +520,7 @@ void Robot::AutonomousInit() { // Runs at start of autonomous phase, only once
 	rightEnc.Reset();
 	mainTimer->Reset();
 	curstep = 0;
+	startYaw = ahrs->GetYaw();
 
 	CheckSide();
 	fpos = CheckPos();
@@ -730,6 +732,8 @@ void Robot::RunSteps() {
 				}
 			}
 			else if (step[0] == 2) { // Encoder Move {2, distance, speed}
+				double tiltCorrectionFactor = 0.1;
+				int acceptableDrift = 5;
 				if (stepSetup) {
 					ResetAll();
 					StopMotors();
@@ -738,10 +742,17 @@ void Robot::RunSteps() {
 				else {
 					double avgEnc = (rightEnc.GetDistance() - leftEnc.GetDistance()) / 2;
 					if (step[1] > 0 && avgEnc < step[1]) {
-						SetLeftSpeed(step[2]);
-						SetRightSpeed(step[2]);
-					}
-					else if (step[1] < 0 && avgEnc > step[1]) {
+						if (ahrs->GetYaw() < startYaw - acceptableDrift) {
+							SetLeftSpeed(step[2] + tiltCorrectionFactor);
+							SetRightSpeed(step[2] - tiltCorrectionFactor);
+						} else if (ahrs->GetYaw() > startYaw + acceptableDrift) {
+							SetLeftSpeed(step[2] - tiltCorrectionFactor);
+							SetRightSpeed(step[2] + tiltCorrectionFactor);
+						} else {
+							SetLeftSpeed(step[2]);
+							SetRightSpeed(step[2]);
+						}
+					} else if (step[1] < 0 && avgEnc > step[1]) {
 						SetLeftSpeed(-step[2]);
 						SetRightSpeed(-step[2]);
 					}
@@ -1005,6 +1016,10 @@ void Robot::RunSteps() {
 		}
 		else {
 			curstep++;
+
+			int stepType = autosteps[curstep][0];
+			if (stepType == 2 or /* nextStepType == 4 or */ stepType == 9) {startYaw = ahrs->GetYaw(); }
+
 			comboLift = false;
 			comboDrive = false;
 			stepSetup = true;

@@ -113,6 +113,8 @@ public:
 	int fpos;
 	std::string mode;
 
+	float startYaw;
+
 	int lastLiftState;
 	bool haltLifter;
 	bool goingPastSwitch;
