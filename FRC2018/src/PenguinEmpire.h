@@ -150,7 +150,7 @@ public:
 	void RunSteps();
 	void ResetAll();
 	void StopMotors();
-	void AutoRunLifter(bool up, bool down, bool temp);
+	void AutoRunLifter(bool up, bool down, bool slower);
 
 	// Teleoperated
 	void TeleopInit();

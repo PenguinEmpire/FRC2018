@@ -924,7 +924,7 @@ void Robot::RunSteps() {
 							break;
 						case 1:
 							if (!bottomSensor->Get()) {
-								AutoRunLifter(true, false, false);
+								AutoRunLifter(true, false, true);
 							}
 							else if (!topSensor->Get()) {
 								AutoRunLifter(false, true, false);
@@ -1058,15 +1058,15 @@ void Robot::StopMotors() {
 	lift2.Set(0.0);
 }
 
-void Robot::AutoRunLifter(bool up, bool down, bool temp) {
+void Robot::AutoRunLifter(bool up, bool down, bool slower) {
 	if (up && !down) {
-		if (temp) {
+		if (slower) {
 			lift1.Set(.7);
 			lift2.Set(.7);
 
 		} else {
-		lift1.Set(1.0);
-		lift2.Set(1.0);
+			lift1.Set(1.0);
+			lift2.Set(1.0);
 		}
 	}
 	else if (!up && down) {
