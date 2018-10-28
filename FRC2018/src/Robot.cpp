@@ -787,7 +787,7 @@ void Robot::RunSteps() {
 					int stage = step[1];
 					switch (stage) {
 					case 0:
-						AutoRunLifter(false, true);
+						AutoRunLifter(false, true, false);
 						if (!bottomSensor->Get()) {
 							StopMotors();
 							stepComplete = true;
@@ -795,10 +795,10 @@ void Robot::RunSteps() {
 						break;
 					case 1:
 						if (!bottomSensor->Get()) {
-							AutoRunLifter(true, false);
+							AutoRunLifter(true, false, true);
 						}
 						else if (!topSensor->Get()) {
-							AutoRunLifter(false, true);
+							AutoRunLifter(false, true, false);
 						}
 
 						if (!switchSensor->Get()) {
@@ -807,7 +807,7 @@ void Robot::RunSteps() {
 						}
 						break;
 					case 2:
-						AutoRunLifter(true, false);
+						AutoRunLifter(true, false, false);
 						if (!topSensor->Get()) {
 							StopMotors();
 							stepComplete = true;
@@ -915,7 +915,7 @@ void Robot::RunSteps() {
 						int stage = step[1];
 						switch (stage) {
 						case 0:
-							AutoRunLifter(false, true);
+							AutoRunLifter(false, true, false);
 							if (!bottomSensor->Get()) {
 								lift1.Set(0.0);
 								lift2.Set(0.0);
@@ -924,10 +924,10 @@ void Robot::RunSteps() {
 							break;
 						case 1:
 							if (!bottomSensor->Get()) {
-								AutoRunLifter(true, false);
+								AutoRunLifter(true, false, false);
 							}
 							else if (!topSensor->Get()) {
-								AutoRunLifter(false, true);
+								AutoRunLifter(false, true, false);
 							}
 
 							if (!switchSensor->Get()) {
@@ -937,7 +937,7 @@ void Robot::RunSteps() {
 							}
 							break;
 						case 2:
-							AutoRunLifter(true, false);
+							AutoRunLifter(true, false, false);
 							if (!topSensor->Get()) {
 								lift1.Set(0.0);
 								lift2.Set(0.0);
@@ -1058,10 +1058,16 @@ void Robot::StopMotors() {
 	lift2.Set(0.0);
 }
 
-void Robot::AutoRunLifter(bool up, bool down) {
+void Robot::AutoRunLifter(bool up, bool down, bool temp) {
 	if (up && !down) {
+		if (temp) {
+			lift1.Set(.7);
+			lift2.Set(.7);
+
+		} else {
 		lift1.Set(1.0);
 		lift2.Set(1.0);
+		}
 	}
 	else if (!up && down) {
 		lift1.Set(-1.0);
